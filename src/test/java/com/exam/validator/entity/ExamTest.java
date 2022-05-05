@@ -76,4 +76,11 @@ public class ExamTest {
 
    }
 
+   @Test
+   public void testGenerateAggregatedReport() {
+      Exam exam = new Exam();
+      exam.generateAggregatedReport();
+
+   }
+
 }

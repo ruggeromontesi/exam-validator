@@ -3,6 +3,9 @@ package com.exam.validator.entity;
 import static com.exam.validator.constants.Constants.AUDITORIUM_NUMBER_OF_COLUMNS;
 import static com.exam.validator.constants.Constants.CHEATING_THRESHOLD;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,6 +25,8 @@ public class Exam {
    private final List<Student> cheatingStudentList = determineCheatingStudentList();
 
    private final Map<String, Map<String,Integer>> reports = createReports();
+
+   private  Map<String,Detail> aggregatedReports;
 
    public List<Student> getStudentList() {
       return studentList;
@@ -149,6 +154,27 @@ public class Exam {
               outputReports.put(student.getName(),report);
            }
       );
+
+      try {
+         BufferedWriter writer = new BufferedWriter(new FileWriter("Reports.txt"));
+         outputReports.forEach( (k,v) -> {
+                  try {
+                     writer.write(k + "\t\t" + v + "\n");
+
+                  } catch (IOException e) {
+                     e.printStackTrace();
+                  }
+
+               }
+
+         );
+         writer.close();
+
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+
+
       return outputReports;
    }
 
@@ -177,6 +203,65 @@ public class Exam {
                System.out.println(k + "  ---->  has " + v +"% of identical answers with student with name " + otherStudentName);
             }
       );
+   }
+
+
+   public void generateAggregatedReport() {
+
+      Map<String,Detail> tempAggregatedReports = new HashMap<>();
+      reports.forEach(
+            (k,v) -> {
+
+
+               double maxAmountOfIdenticalAnswers =
+                     v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
+
+               String fromWhomHeCopied = v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
+               double ratio = 100*(maxAmountOfIdenticalAnswers/16);
+               tempAggregatedReports.put(k,new Detail(fromWhomHeCopied,ratio));
+
+            }
+      );
+
+
+      aggregatedReports =
+            tempAggregatedReports.entrySet().stream()
+                  .sorted(Collections.reverseOrder(Comparator.comparingDouble(e -> e.getValue().percentageOfIdenticalAnswersWithSuspectedNeighbour)))
+                  .collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)
+                  );
+
+
+
+
+      try {
+         BufferedWriter writer = new BufferedWriter(new FileWriter("aggregatedReports.txt"));
+         aggregatedReports.forEach((k,v) -> {
+            try {
+               writer.write(k + "  ---->  has " + v.percentageOfIdenticalAnswersWithSuspectedNeighbour + "% of identical answers "
+                     + "with student with name " + v.fromWhomThisStudentCopied + "\n");
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         });
+         writer.close();
+
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+
+
+
+   }
+
+   class Detail{
+      private String fromWhomThisStudentCopied;
+      private double percentageOfIdenticalAnswersWithSuspectedNeighbour;
+
+      public Detail(String fromWhomThisStudentCopied, double percentageOfIdenticalAnswersWithSuspectedNeighbour) {
+         this.fromWhomThisStudentCopied = fromWhomThisStudentCopied;
+         this.percentageOfIdenticalAnswersWithSuspectedNeighbour = percentageOfIdenticalAnswersWithSuspectedNeighbour;
+      }
    }
 
 }
