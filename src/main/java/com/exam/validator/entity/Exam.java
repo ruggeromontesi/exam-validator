@@ -195,11 +195,12 @@ public class Exam {
          try {
             writer.write(k + "  ---->  has " + v.percentageOfIdenticalAnswersWithSuspectedNeighbour + "% of identical answers "
                   + "with student with name " + v.fromWhomThisStudentCopied + "\n");
-            writer.close();
+
          } catch (IOException e) {
             e.printStackTrace();
          }
       });
+      writer.close();
 
    }
 
