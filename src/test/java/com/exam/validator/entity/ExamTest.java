@@ -1,5 +1,9 @@
 package com.exam.validator.entity;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,24 +26,18 @@ public class ExamTest {
 
    @Test
    public void testGetNeighboursList(){
-
-      Exam exam = new Exam();
-
-      String studentName = "Studentas4";
+      String studentName = "Studentas12";
+      List<Student> neighbours = Arrays.asList(
+            exam.getByName("Studentas3").get(),
+            exam.getByName("Studentas4").get(),
+            exam.getByName("Studentas5").get(),
+            exam.getByName("Studentas11").get(),
+            exam.getByName("Studentas13").get()
+      );
       Student studentA = exam.getByName(studentName).get();
-      exam.getNeighboursList(studentA).forEach(System.out::println);
 
-      System.out.println("*************************************************");
-      System.out.println("*************************************************");
-      System.out.println("*************************************************");
-
-      exam.getStudentList().forEach(student -> {
-         System.out.println("*************************************************");
-         System.out.println("printing neighbours for student " + student.getName());
-         exam.getNeighboursList(student).forEach(student1 -> System.out.println(student1.getName()));
-         System.out.println("*************************************************");
-
-      });
+      Assert.assertEquals(neighbours.size(),
+            neighbours.stream().filter(student -> exam.getNeighboursList(studentA).contains(student) ).count());
 
    }
 
@@ -75,15 +73,18 @@ public class ExamTest {
    @Test
    public void testPrintAggregateReport(){
       Exam exam = new Exam();
-      exam.printAggregateReport();
+
 
    }
 
    @Test
    public void testGenerateAggregatedReport() {
       Exam exam = new Exam();
-      exam.generateAggregatedReport();
-
+      try {
+         exam.generateAggregatedReport();
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
    }
 
 }

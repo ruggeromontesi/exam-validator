@@ -26,7 +26,7 @@ public class Exam {
 
    private final List<Student> cheatingStudentList = determineCheatingStudentList();
 
-   private final Map<String, Map<String,Integer>> reports = createReports();
+   private Map<String, Map<String,Integer>> reports;
 
    private  Map<String,Detail> aggregatedReports;
 
@@ -74,7 +74,6 @@ public class Exam {
    }
 
    public List<String> getCoordinatesOfNeighbouringSittingLocations(Student thisStudent) {
-      //TODO
       int rowIndex = Integer.parseInt(thisStudent.getSittingLocation().substring(0,1));
       int colIndex = Integer.parseInt(thisStudent.getSittingLocation().substring(2,3));
       List<String> possibleCoordinateOfNeighbours = new ArrayList<>();
@@ -99,7 +98,6 @@ public class Exam {
          possibleCoordinateOfNeighbours.add((rowIndex - 1) + "." + (colIndex + 1));
       }
       return possibleCoordinateOfNeighbours;
-
    }
 
     List<Student> getNeighboursList(Student thisStudent) {
@@ -115,14 +113,11 @@ public class Exam {
    public boolean isThisStudentCheating(Student thisStudent) {
       List<Student> neighboursList = getNeighboursList(thisStudent);
       return neighboursList
-            .stream()
-            .filter(
-            student -> student
-                        .getAnswers()
-                        .entrySet()
-                        .stream()
-                  .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count() > CHEATING_THRESHOLD
-      ).count() > 0;
+            .stream().anyMatch(student -> student
+                  .getAnswers()
+                  .entrySet()
+                  .stream()
+                  .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count() > CHEATING_THRESHOLD);
 
    }
 
@@ -130,7 +125,7 @@ public class Exam {
       return studentList.stream().filter(this::isThisStudentCheating).collect(Collectors.toList());
    }
 
-   private Map<String, Map<String,Integer>> createReports() {
+   private void createReports() throws IOException {
       Comparator<String> c = (s1, s2) -> {
          int id1    =  Integer.parseInt(s1.substring(s1.indexOf('s') + 1));
          int id2    =  Integer.parseInt(s2.substring(s2.indexOf('s') + 1));
@@ -157,78 +152,36 @@ public class Exam {
            }
       );
 
-      try {
-         File directory = new File(REPORTS_DIRECTORY);
-         if (!directory.exists()){
-            directory.mkdirs();
-         }
-         BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" +"reports.txt"));
-         outputReports.forEach( (k,v) -> {
-                  try {
-                     writer.write(k + "\t\t" + v + "\n");
-
-                  } catch (IOException e) {
-                     e.printStackTrace();
-                  }
-
-               }
-
-         );
-         writer.close();
-
-      } catch (IOException e) {
-         e.printStackTrace();
+      File directory = new File(REPORTS_DIRECTORY);
+      if (!directory.exists()){
+         directory.mkdirs();
       }
+      BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" +"reports.txt"));
+      outputReports.forEach( (k,v) -> {
+               try {
+                  writer.write(k + "\t\t" + v + "\n");
 
-
-      return outputReports;
-   }
-
-   public void printAggregateReport(){
-      Map<String,Double> aggregateReport = new TreeMap<>();
-      reports.forEach(
-            (k,v) -> {
-               double maxAmountOfIdenticalAnswers =
-                     v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
-               double ratio = 100*(maxAmountOfIdenticalAnswers/16);
-               aggregateReport.put(k,ratio);
+               } catch (IOException e) {
+                  e.printStackTrace();
+               }
             }
       );
+      writer.close();
+      reports = outputReports;
 
-      Map<String,Double> sortedAggregateReport =
-            aggregateReport.entrySet().stream()
-                  .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                  .collect(Collectors.toMap(
-                        Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-      sortedAggregateReport.forEach(
-            (k,v) -> {
-
-               String otherStudentName =
-                     reports.get(k).entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
-               System.out.println(k + "  ---->  has " + v +"% of identical answers with student with name " + otherStudentName);
-            }
-      );
    }
 
-
-   public void generateAggregatedReport() {
-
+   public void generateAggregatedReport() throws IOException{
       Map<String,Detail> tempAggregatedReports = new HashMap<>();
       reports.forEach(
             (k,v) -> {
-
-
                double maxAmountOfIdenticalAnswers =
                      v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
-
                String fromWhomHeCopied = v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
                double ratio = 100*(maxAmountOfIdenticalAnswers/16);
                tempAggregatedReports.put(k,new Detail(fromWhomHeCopied,ratio));
-
             }
       );
-
 
       aggregatedReports =
             tempAggregatedReports.entrySet().stream()
@@ -237,33 +190,26 @@ public class Exam {
                         Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)
                   );
 
-
-
-
-      try {
-         BufferedWriter writer = new BufferedWriter(new FileWriter("target/generated-reports/aggregatedReports.txt"));
-         aggregatedReports.forEach((k,v) -> {
-            try {
-               writer.write(k + "  ---->  has " + v.percentageOfIdenticalAnswersWithSuspectedNeighbour + "% of identical answers "
-                     + "with student with name " + v.fromWhomThisStudentCopied + "\n");
-            } catch (IOException e) {
-               e.printStackTrace();
-            }
-         });
-         writer.close();
-
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-
-
+      BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/aggregatedReports.txt"));
+      aggregatedReports.forEach((k,v) -> {
+         try {
+            writer.write(k + "  ---->  has " + v.percentageOfIdenticalAnswersWithSuspectedNeighbour + "% of identical answers "
+                  + "with student with name " + v.fromWhomThisStudentCopied + "\n");
+            writer.close();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      });
 
    }
 
-   public void generateReports() {
-      createReports();
-      generateAggregatedReport();
-
+   public void generateReports()  {
+     try {
+         createReports();
+         generateAggregatedReport();
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
    }
 
    class Detail {
@@ -275,5 +221,4 @@ public class Exam {
          this.percentageOfIdenticalAnswersWithSuspectedNeighbour = percentageOfIdenticalAnswersWithSuspectedNeighbour;
       }
    }
-
 }

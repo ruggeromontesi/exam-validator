@@ -1,5 +1,6 @@
 package com.exam.validator;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,9 +59,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
-        //List<Student> students = CSVReader.parse();
-        new Exam();
+        new Exam().generateReports();
     }
 }
 
