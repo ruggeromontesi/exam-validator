@@ -61,4 +61,19 @@ public class ExamTest {
       exam.getCheatingStudentList().forEach(System.out::println);
    }
 
+   @Test
+   public void testGenerateReports() {
+      Exam exam = new Exam();
+      System.out.println(exam.getReports());
+      exam.getReports().forEach((k,v) -> System.out.println(k + "\t\t" + v + "\n\n"));
+
+   }
+
+   @Test
+   public void testPrintAggregateReport(){
+      Exam exam = new Exam();
+      exam.printAggregateReport();
+
+   }
+
 }
