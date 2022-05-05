@@ -1,20 +1,23 @@
 package com.exam.validator.entity;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ExamTest {
 
+   private Exam exam = new Exam();
+
+   @Test
+   public void testCreateStudentList(){
+      Assert.assertFalse(exam.getStudentList().isEmpty());
+   }
+
    @Test
    public void testGetByName(){
-
-      Exam exam = new Exam();
-
       for(int i= 1; i <63; i++){
          String name = "Studentas"+i;
-         System.out.println(exam.getByName(name).orElseThrow(RuntimeException::new));
-
+         Assert.assertEquals(name,exam.getByName(name).get().getName() );
       }
-
    }
 
    @Test
