@@ -5,11 +5,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class ExamTest {
 
-   private Exam exam = new Exam();
+   private Exam exam;
+
+   @Before
+   public void setUp() {
+      exam = new Exam();
+   }
 
    @Test
    public void testCreateStudentList(){
@@ -64,7 +70,7 @@ public class ExamTest {
 
    @Test
    public void testGenerateReports() {
-      Exam exam = new Exam();
+      exam.generateReports();
       System.out.println(exam.getReports());
       exam.getReports().forEach((k,v) -> System.out.println(k + "\t\t" + v + "\n\n"));
 
@@ -81,6 +87,7 @@ public class ExamTest {
    public void testGenerateAggregatedReport() {
       Exam exam = new Exam();
       try {
+         exam.generateReports();
          exam.generateAggregatedReport();
       } catch (IOException e) {
          e.printStackTrace();
