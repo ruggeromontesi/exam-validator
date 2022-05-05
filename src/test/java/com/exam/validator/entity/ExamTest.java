@@ -64,7 +64,7 @@ public class ExamTest {
 
    @Test
    public void testDetermineCheatingStudentList(){
-      Exam exam = new Exam();
+
       exam.getCheatingStudentList().forEach(System.out::println);
    }
 
@@ -76,12 +76,6 @@ public class ExamTest {
 
    }
 
-   @Test
-   public void testPrintAggregateReport(){
-      Exam exam = new Exam();
-
-
-   }
 
    @Test
    public void testGenerateAggregatedReport() {
