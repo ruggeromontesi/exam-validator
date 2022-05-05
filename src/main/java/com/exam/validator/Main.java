@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.exam.validator.entity.Exam;
 import com.exam.validator.entity.Student;
 import com.exam.validator.util.CSVReader;
 
@@ -57,7 +58,9 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        List<Student> students = CSVReader.parse();
+
+        //List<Student> students = CSVReader.parse();
+        new Exam();
     }
 }
 

@@ -7,4 +7,6 @@ public interface Constants {
    // is higher than this value
    int CHEATING_THRESHOLD = 5;
 
+   String REPORTS_DIRECTORY = "target/generated-reports/";
+
 }

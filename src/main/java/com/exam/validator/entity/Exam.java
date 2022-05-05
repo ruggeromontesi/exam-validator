@@ -2,8 +2,10 @@ package com.exam.validator.entity;
 
 import static com.exam.validator.constants.Constants.AUDITORIUM_NUMBER_OF_COLUMNS;
 import static com.exam.validator.constants.Constants.CHEATING_THRESHOLD;
+import static com.exam.validator.constants.Constants.REPORTS_DIRECTORY;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -156,7 +158,11 @@ public class Exam {
       );
 
       try {
-         BufferedWriter writer = new BufferedWriter(new FileWriter("Reports.txt"));
+         File directory = new File(REPORTS_DIRECTORY);
+         if (!directory.exists()){
+            directory.mkdirs();
+         }
+         BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" +"reports.txt"));
          outputReports.forEach( (k,v) -> {
                   try {
                      writer.write(k + "\t\t" + v + "\n");
@@ -235,7 +241,7 @@ public class Exam {
 
 
       try {
-         BufferedWriter writer = new BufferedWriter(new FileWriter("aggregatedReports.txt"));
+         BufferedWriter writer = new BufferedWriter(new FileWriter("target/generated-reports/aggregatedReports.txt"));
          aggregatedReports.forEach((k,v) -> {
             try {
                writer.write(k + "  ---->  has " + v.percentageOfIdenticalAnswersWithSuspectedNeighbour + "% of identical answers "
@@ -254,9 +260,15 @@ public class Exam {
 
    }
 
-   class Detail{
-      private String fromWhomThisStudentCopied;
-      private double percentageOfIdenticalAnswersWithSuspectedNeighbour;
+   public void generateReports() {
+      createReports();
+      generateAggregatedReport();
+
+   }
+
+   class Detail {
+      private final String fromWhomThisStudentCopied;
+      private final double percentageOfIdenticalAnswersWithSuspectedNeighbour;
 
       public Detail(String fromWhomThisStudentCopied, double percentageOfIdenticalAnswersWithSuspectedNeighbour) {
          this.fromWhomThisStudentCopied = fromWhomThisStudentCopied;

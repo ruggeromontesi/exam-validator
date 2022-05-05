@@ -13,7 +13,7 @@ import com.exam.validator.entity.Student;
 public class CSVReader {
    public static List<Student> parse() {
 
-      String csvFile = "results.csv";
+      String csvFile = "resources/results.csv";
       String line = "";
       String cvsSplitBy = ",";
 

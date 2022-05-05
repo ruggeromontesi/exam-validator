@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
-  <artifactId>Task</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>Visma-task-2022</artifactId>
+  <version>1.0</version>
 
   <name>Task</name>
   <!-- FIXME change it to the project's website -->
@@ -69,6 +69,25 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
+        <!--- by ruggero -->
+        <plugin>
+          <!-- Build an executable JAR -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <classpathPrefix>lib/</classpathPrefix>
+                <mainClass>com.exam.validator.Main</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+
+
+        <!--- by ruggero -->
       </plugins>
     </pluginManagement>
       <plugins>
@@ -76,8 +95,8 @@
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-compiler-plugin</artifactId>
               <configuration>
-                  <source>8</source>
-                  <target>8</target>
+                  <source>11</source>
+                  <target>11</target>
               </configuration>
           </plugin>
       </plugins>
