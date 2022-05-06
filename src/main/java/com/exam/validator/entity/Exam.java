@@ -1,9 +1,5 @@
 package com.exam.validator.entity;
 
-import static com.exam.validator.constants.Constants.AUDITORIUM_NUMBER_OF_COLUMNS;
-import static com.exam.validator.constants.Constants.CHEATING_THRESHOLD;
-import static com.exam.validator.constants.Constants.REPORTS_DIRECTORY;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,6 +16,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.exam.validator.util.CSVReader;
+
+import static com.exam.validator.constants.Constants.*;
 
 public class Exam {
    private final List<Student> studentList = CSVReader.parse();
@@ -42,7 +40,11 @@ public class Exam {
       return reports;
    }
 
-   Optional<Student> getByName(String name) {
+    public Map<String, Detail> getAggregatedReports() {
+        return aggregatedReports;
+    }
+
+    Optional<Student> getByName(String name) {
       return studentList.stream().filter(
             student -> student.getName().equals(name)
       ).collect(
@@ -156,7 +158,7 @@ public class Exam {
       if (!directory.exists()){
          directory.mkdirs();
       }
-      BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" +"reports.txt"));
+      BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + DETAILED_REPORT_FILENAME));
       outputReports.forEach( (k,v) -> {
                try {
                   writer.write(k + "\t\t" + v + "\n");
@@ -177,9 +179,9 @@ public class Exam {
             (k,v) -> {
                double maxAmountOfIdenticalAnswers =
                      v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
-               String fromWhomHeCopied = v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
-               double ratio = 100*(maxAmountOfIdenticalAnswers/16);
-               tempAggregatedReports.put(k,new Detail(fromWhomHeCopied,ratio));
+               String fromWhomTheStudentCopied = v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
+               int ratio = (int) ((100*maxAmountOfIdenticalAnswers)/16);
+               tempAggregatedReports.put(k,new Detail(fromWhomTheStudentCopied,ratio));
             }
       );
 
@@ -191,6 +193,7 @@ public class Exam {
                   );
 
       BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/aggregatedReports.txt"));
+      writer.write(AGGREGATED_REPORTS_HEADER);
       aggregatedReports.forEach((k,v) -> {
          try {
             writer.write(k + "  ---->  has " + v.percentageOfIdenticalAnswersWithSuspectedNeighbour + "% of identical answers "
@@ -215,9 +218,17 @@ public class Exam {
 
    class Detail {
       private final String fromWhomThisStudentCopied;
-      private final double percentageOfIdenticalAnswersWithSuspectedNeighbour;
+      private final int percentageOfIdenticalAnswersWithSuspectedNeighbour;
 
-      public Detail(String fromWhomThisStudentCopied, double percentageOfIdenticalAnswersWithSuspectedNeighbour) {
+       public String getFromWhomThisStudentCopied() {
+           return fromWhomThisStudentCopied;
+       }
+
+       public int getPercentageOfIdenticalAnswersWithSuspectedNeighbour() {
+           return percentageOfIdenticalAnswersWithSuspectedNeighbour;
+       }
+
+       public Detail(String fromWhomThisStudentCopied, int percentageOfIdenticalAnswersWithSuspectedNeighbour) {
          this.fromWhomThisStudentCopied = fromWhomThisStudentCopied;
          this.percentageOfIdenticalAnswersWithSuspectedNeighbour = percentageOfIdenticalAnswersWithSuspectedNeighbour;
       }

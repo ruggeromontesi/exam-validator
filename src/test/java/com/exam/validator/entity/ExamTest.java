@@ -76,6 +76,16 @@ public class ExamTest {
 
    }
 
+   @Test
+   public void testPrintAggregatedReports () throws IOException{
+      exam.generateReports();
+      exam.generateAggregatedReport();
+
+      exam.getAggregatedReports().forEach((k,v) -> System.out.println(k + "  ---->  has " + v.getPercentageOfIdenticalAnswersWithSuspectedNeighbour() + "% of identical answers "
+              + "with student with name " + v.getFromWhomThisStudentCopied()+ "\n"));
+
+   }
+
 
    @Test
    public void testGenerateAggregatedReport() {
