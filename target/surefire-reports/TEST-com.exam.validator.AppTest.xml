@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.exam.validator.AppTest" time="0.012" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="sun.desktop" value="windows"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.specification.version" value="11"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Projects\V\Visma - Java Homework task2\Task\target\test-classes;C:\Projects\V\Visma - Java Homework task2\Task\target\classes;C:\Programs\apache-maven\repository\junit\junit\4.11\junit-4.11.jar;C:\Programs\apache-maven\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;"/>
+    <property name="java.vm.vendor" value="Amazon.com Inc."/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://aws.amazon.com/corretto/"/>
+    <property name="user.timezone" value="Europe/Helsinki"/>
+    <property name="java.vm.specification.version" value="11"/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="GB"/>
+    <property name="sun.boot.library.path" value="C:\Java\jdk11\bin"/>
+    <property name="sun.java.command" value="C:\Users\Montesr\AppData\Local\Temp\surefire15153732301464938668\surefirebooter10063861483334321973.jar C:\Users\Montesr\AppData\Local\Temp\surefire15153732301464938668 2022-05-06T15-30-48_423-jvmRun1 surefire5278211645269916364tmp surefire_011350542196920153735tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Projects\V\Visma - Java Homework task2\Task\target\test-classes;C:\Projects\V\Visma - Java Homework task2\Task\target\classes;C:\Programs\apache-maven\repository\junit\junit\4.11\junit-4.11.jar;C:\Programs\apache-maven\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\Montesr"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2019-10-15"/>
+    <property name="java.home" value="C:\Java\jdk11"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Projects\V\Visma - Java Homework task2\Task"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="C:\Users\Montesr\AppData\Local\Temp\surefire15153732301464938668\surefirebooter10063861483334321973.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="11.0.5+10-LTS"/>
+    <property name="user.name" value="montesr"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Corretto-11.0.5.10.1"/>
+    <property name="localRepository" value="C:\Programs\apache-maven\repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-11/issues/"/>
+    <property name="java.io.tmpdir" value="C:\Users\Montesr\AppData\Local\Temp\"/>
+    <property name="java.version" value="11.0.5"/>
+    <property name="user.dir" value="C:\Projects\V\Visma - Java Homework task2\Task"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="java.library.path" value="C:\Java\jdk11\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Java\jdk11\bin;C:\oracle19c\install\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\OpenText\Viewer\bin;c:\Program Files (x86)\Pulse Secure\VC142.CRT\X64\;c:\Program Files (x86)\Pulse Secure\VC142.CRT\X86\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Programs\apache-maven\bin;C:\Programs\apache-maven\bin;C:\Program Files\Git\cmd;C:\Programs\;C:\Gradle\gradle-7.4.2\bin;C:\Users\Montesr\AppData\Local\Microsoft\WindowsApps;&quot;c:\oracle19c\install\bin;C:\Java\jdk11\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\OpenText\Viewer\bin;c:\Program Files (x86)\Pulse Secure\&quot;;;."/>
+    <property name="java.vendor" value="Amazon.com Inc."/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vm.version" value="11.0.5+10-LTS"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="55.0"/>
+  </properties>
+  <testcase name="shouldAnswerWithTrue" classname="com.exam.validator.AppTest" time="0.001"/>
+</testsuite>

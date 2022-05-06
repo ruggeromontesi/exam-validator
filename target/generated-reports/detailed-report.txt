@@ -1,11 +1,10 @@
-AGGREGATED REPORTS
-This file provides an aggregated report for each student. A single record is shown on each line.
+STUDENT DETAILED REPORT
+This file provides a detailed report for each student. A single record is shown on each line.
 
 Each line consists of the following:
 1) Student name.
-2) highest percentage of answers identical to neighbours, i.e.:  is first calculated the percentage of 
-identical answers with all the neighbours, is then considered the highest percentage.
-3)Name of the neighbouring student who has the highest percentage of similar answers with the considered student. 
+2) A map where are listed the names of neighboring students and the amount of identical answers with them
+ 
 
 
 Studentas1		{Studentas2=6}

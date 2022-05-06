@@ -1,32 +1,33 @@
 package com.exam.validator.entity;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
 import com.exam.validator.util.CSVReader;
 
-import static com.exam.validator.constants.Constants.*;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.exam.validator.constants.Constants.AUDITORIUM_NUMBER_OF_COLUMNS;
 
 public class Exam {
+   private int cheatingThreshold = 8;
    private final List<Student> studentList = CSVReader.parse();
-
    private final List<Student> cheatingStudentList = determineCheatingStudentList();
+   private Map<String, Map<String,Integer>> detailedReport;
+   private  Map<String,Detail> aggregatedReport;
 
-   private Map<String, Map<String,Integer>> reports;
+   public Exam(int cheatingThreshold) {
+      this();
+      this.cheatingThreshold = cheatingThreshold;
+   }
 
-   private  Map<String,Detail> aggregatedReports;
+   public Exam() {
+       try {
+           generateDetailedReports();
+           generateAggregatedReport();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+    }
 
    public List<Student> getStudentList() {
       return studentList;
@@ -36,29 +37,13 @@ public class Exam {
       return cheatingStudentList;
    }
 
-   public Map<String, Map<String, Integer>> getReports() {
-      return reports;
+   public Map<String, Map<String, Integer>> getDetailedReport() {
+      return detailedReport;
    }
 
-    public Map<String, Detail> getAggregatedReports() {
-        return aggregatedReports;
+    public Map<String, Detail> getAggregatedReport() {
+        return aggregatedReport;
     }
-
-    Optional<Student> getByName(String name) {
-      return studentList.stream().filter(
-            student -> student.getName().equals(name)
-      ).collect(
-            Collectors.collectingAndThen(
-                  Collectors.toList(),
-                  list -> {
-                     if (list.size() > 1) {
-                        throw new RuntimeException("More than a student with with same name!");
-                     }
-                     return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
-                  }
-            )
-      );
-   }
 
    Optional<Student> getByCoordinate(String coordinate) {
       return studentList.stream().filter(
@@ -68,7 +53,7 @@ public class Exam {
                   Collectors.toList(),
                   list -> {
                      if (list.size() > 1) {
-                        throw new RuntimeException("More than a student with with same name!");
+                        throw new RuntimeException("More than a student with with same sitting location!");
                      }
                      return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
                   }
@@ -119,25 +104,21 @@ public class Exam {
                   .getAnswers()
                   .entrySet()
                   .stream()
-                  .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count() > CHEATING_THRESHOLD);
-
+                  .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count() > cheatingThreshold);
    }
 
    public List<Student> determineCheatingStudentList(){
       return studentList.stream().filter(this::isThisStudentCheating).collect(Collectors.toList());
    }
 
-   private void createReports() throws IOException {
-      Comparator<String> c = (s1, s2) -> {
-         int id1    =  Integer.parseInt(s1.substring(s1.indexOf('s') + 1));
-         int id2    =  Integer.parseInt(s2.substring(s2.indexOf('s') + 1));
-         return id1 - id2;
-      };
-      Map<String, Map<String,Integer>> outputReports = new TreeMap<>(c);
+   private void generateDetailedReports() throws IOException {
+       Comparator<String> stringComparator = Comparator.comparingInt(s -> Integer.parseInt(s.substring(s.indexOf('s') + 1)));
+
+      Map<String, Map<String,Integer>> outputReports = new TreeMap<>(stringComparator);
       studentList.forEach(
            student -> {
               List<Student> neighboursList = getNeighboursList(student);
-              Map<String,Integer> report = new TreeMap<>(c);
+              Map<String,Integer> report = new TreeMap<>(stringComparator);
 
               neighboursList.forEach(
                     neighbourStudent -> {
@@ -153,71 +134,35 @@ public class Exam {
               outputReports.put(student.getName(),report);
            }
       );
-
-      File directory = new File(REPORTS_DIRECTORY);
-      if (!directory.exists()){
-         directory.mkdirs();
-      }
-      BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + DETAILED_REPORT_FILENAME));
-      writer.write(DETAILED_REPORTS_HEADER);
-      outputReports.forEach( (k,v) -> {
-               try {
-                  writer.write(k + "\t\t" + v + "\n");
-
-               } catch (IOException e) {
-                  e.printStackTrace();
-               }
-            }
-      );
-      writer.close();
-      reports = outputReports;
-
+      detailedReport = outputReports;
    }
 
    public void generateAggregatedReport() throws IOException{
       Map<String,Detail> tempAggregatedReports = new HashMap<>();
-      reports.forEach(
+      detailedReport.forEach(
             (k,v) -> {
                double maxAmountOfIdenticalAnswers =
                      v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
-               String fromWhomTheStudentCopied = v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
+               String fromWhomTheStudentCopied = v.entrySet()
+                       .stream()
+                       .max(Comparator.comparingInt(Map.Entry::getValue))
+                       .get()
+                       .getKey();
                int ratio = (int) ((100*maxAmountOfIdenticalAnswers)/16);
                tempAggregatedReports.put(k,new Detail(fromWhomTheStudentCopied,ratio));
             }
       );
 
-      aggregatedReports =
+      aggregatedReport =
             tempAggregatedReports.entrySet().stream()
-                  .sorted(Collections.reverseOrder(Comparator.comparingDouble(e -> e.getValue().percentageOfIdenticalAnswersWithSuspectedNeighbour)))
+                  .sorted(Collections.reverseOrder(
+                          Comparator.comparingDouble(e -> e.getValue().percentageOfIdenticalAnswersWithSuspectedNeighbour)))
                   .collect(Collectors.toMap(
                         Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)
                   );
-
-      BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + AGGREGATED_REPORT_FILENAME));
-      writer.write(AGGREGATED_REPORTS_HEADER);
-      aggregatedReports.forEach((k,v) -> {
-         try {
-            writer.write(k + "  ---->  has " + v.percentageOfIdenticalAnswersWithSuspectedNeighbour + "% of identical answers "
-                  + "with student with name " + v.fromWhomThisStudentCopied + "\n");
-
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      });
-      writer.close();
-
    }
 
-   public void generateReports()  {
-     try {
-         createReports();
-         generateAggregatedReport();
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-   }
-
-   class Detail {
+   public class Detail {
       private final String fromWhomThisStudentCopied;
       private final int percentageOfIdenticalAnswersWithSuspectedNeighbour;
 

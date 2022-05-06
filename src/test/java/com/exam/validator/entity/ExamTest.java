@@ -3,6 +3,8 @@ package com.exam.validator.entity;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +28,7 @@ public class ExamTest {
    public void testGetByName(){
       for(int i= 1; i <63; i++){
          String name = "Studentas"+i;
-         Assert.assertEquals(name,exam.getByName(name).get().getName() );
+         Assert.assertEquals(name,getByName(name).get().getName() );
       }
    }
 
@@ -34,13 +36,13 @@ public class ExamTest {
    public void testGetNeighboursList(){
       String studentName = "Studentas12";
       List<Student> neighbours = Arrays.asList(
-            exam.getByName("Studentas3").get(),
-            exam.getByName("Studentas4").get(),
-            exam.getByName("Studentas5").get(),
-            exam.getByName("Studentas11").get(),
-            exam.getByName("Studentas13").get()
+            getByName("Studentas3").get(),
+            getByName("Studentas4").get(),
+            getByName("Studentas5").get(),
+            getByName("Studentas11").get(),
+            getByName("Studentas13").get()
       );
-      Student studentA = exam.getByName(studentName).get();
+      Student studentA = getByName(studentName).get();
 
       Assert.assertEquals(neighbours.size(),
             neighbours.stream().filter(student -> exam.getNeighboursList(studentA).contains(student) ).count());
@@ -70,32 +72,34 @@ public class ExamTest {
 
    @Test
    public void testGenerateReports() {
-      exam.generateReports();
-      System.out.println(exam.getReports());
-      exam.getReports().forEach((k,v) -> System.out.println(k + "\t\t" + v + "\n\n"));
+      System.out.println(exam.getDetailedReport());
+      exam.getDetailedReport().forEach((k, v) -> System.out.println(k + "\t\t" + v + "\n\n"));
 
    }
 
    @Test
    public void testPrintAggregatedReports () throws IOException{
-      exam.generateReports();
-      exam.generateAggregatedReport();
-
-      exam.getAggregatedReports().forEach((k,v) -> System.out.println(k + "  ---->  has " + v.getPercentageOfIdenticalAnswersWithSuspectedNeighbour() + "% of identical answers "
+      exam.getAggregatedReport().forEach((k, v) -> System.out.println(k + "  ---->  has " + v.getPercentageOfIdenticalAnswersWithSuspectedNeighbour() + "% of identical answers "
               + "with student with name " + v.getFromWhomThisStudentCopied()+ "\n"));
 
    }
 
+   private Optional<Student> getByName(String name) {
+      List<Student> studentList = exam.getStudentList();
 
-   @Test
-   public void testGenerateAggregatedReport() {
-      Exam exam = new Exam();
-      try {
-         exam.generateReports();
-         exam.generateAggregatedReport();
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
+      return studentList.stream().filter(
+              student -> student.getName().equals(name)
+      ).collect(
+              Collectors.collectingAndThen(
+                      Collectors.toList(),
+                      list -> {
+                         if (list.size() > 1) {
+                            throw new RuntimeException("More than a student with with same name!");
+                         }
+                         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+                      }
+              )
+      );
    }
 
 }

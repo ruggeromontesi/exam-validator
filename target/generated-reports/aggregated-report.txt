@@ -1,4 +1,4 @@
-AGGREGATED REPORTS
+STUDENT AGGREGATED REPORT
 This file provides an aggregated report for each student. A single record is shown on each line.
 
 Each line consists of the following:
