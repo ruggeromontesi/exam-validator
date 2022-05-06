@@ -32,9 +32,9 @@ public interface Constants {
            " \n\n\n";
 
    String THRESHOLD_BASED_REPORT_HEADER  = "THRESHOLD BASED CHEATING STUDENT LIST\n" +
-           "This file provides a list of cheating students defined so according to the amount of answers identical\n" +
-           "to neighbours. If this student answered in the same way, as neighbour did, to an amount of questions \n" +
-           "higher than a pre-defined threshold then the student is considered to have been cheating.\n" +
+           "This file provides a list of cheating students." +
+           "A student is defined as cheating student when the amount of his answers that are identical\n" +
+           "to the answers of one of his neighbours is higher than a pre-set value." +
            " \n";
 
 
