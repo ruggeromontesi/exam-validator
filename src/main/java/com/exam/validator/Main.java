@@ -8,6 +8,7 @@ import java.util.Map;
 import com.exam.validator.entity.Exam;
 import com.exam.validator.entity.Student;
 import com.exam.validator.util.CSVReader;
+import com.exam.validator.util.ReportPrinter;
 
 /**
  *
@@ -58,8 +59,10 @@ public class Main {
         correctAnswers.put(16, "a");
     }
 
-    public static void main(String[] args) {
-        new Exam();
+    public static void main(String[] args) throws IOException {
+        Exam exam = new Exam();
+        ReportPrinter.printDetailedReport(exam);
+        ReportPrinter.printAggregatedReport(exam);
     }
 }
 
