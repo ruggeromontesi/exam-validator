@@ -56,7 +56,6 @@ public class Main {
     }
 
     public static void main(String[] args)  {
-        System.out.println("running the application");
         Exam exam = new Exam(args);
         ReportPrinter.printReports(exam);
     }
