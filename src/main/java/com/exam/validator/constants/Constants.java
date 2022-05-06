@@ -11,10 +11,12 @@ public interface Constants {
 
    String DETAILED_REPORT_FILENAME = "detailed-report.txt";
 
-   String DETAILED_REPORTS_HEADER  = "AGGREGATED REPORTS\n";
+   String AGGREGATED_REPORT_FILENAME = "aggregated-report.txt";
+
+   String DETAILED_REPORTS_HEADER  = "DETAILED REPORTS\n";
 
    String AGGREGATED_REPORTS_HEADER  = "AGGREGATED REPORTS\n" +
-           "This file provides an aggregated report for each student. A singler ecord is shown on each line.\n\n" +
+           "This file provides an aggregated report for each student. A single record is shown on each line.\n\n" +
            "Each line consists of the following:\n" +
            "1) Student name.\n" +
            "2) highest percentage of answers identical to neighbours, i.e.:  is first calculated the percentage of \n" +

@@ -1,0 +1,72 @@
+AGGREGATED REPORTS
+This file provides an aggregated report for each student. A single record is shown on each line.
+
+Each line consists of the following:
+1) Student name.
+2) highest percentage of answers identical to neighbours, i.e.:  is first calculated the percentage of 
+identical answers with all the neighbours, is then considered the highest percentage.
+3)Name of the neighbouring student who has the highest percentage of similar answers with the considered student. 
+
+
+Studentas12  ---->  has 81% of identical answers with student with name Studentas13
+Studentas13  ---->  has 81% of identical answers with student with name Studentas12
+Studentas29  ---->  has 81% of identical answers with student with name Studentas28
+Studentas28  ---->  has 81% of identical answers with student with name Studentas29
+Studentas49  ---->  has 68% of identical answers with student with name Studentas42
+Studentas30  ---->  has 68% of identical answers with student with name Studentas31
+Studentas31  ---->  has 68% of identical answers with student with name Studentas30
+Studentas52  ---->  has 62% of identical answers with student with name Studentas43
+Studentas19  ---->  has 62% of identical answers with student with name Studentas13
+Studentas58  ---->  has 62% of identical answers with student with name Studentas59
+Studentas59  ---->  has 62% of identical answers with student with name Studentas58
+Studentas6  ---->  has 56% of identical answers with student with name Studentas7
+Studentas7  ---->  has 56% of identical answers with student with name Studentas6
+Studentas35  ---->  has 56% of identical answers with student with name Studentas36
+Studentas36  ---->  has 56% of identical answers with student with name Studentas28
+Studentas43  ---->  has 50% of identical answers with student with name Studentas36
+Studentas40  ---->  has 50% of identical answers with student with name Studentas31
+Studentas48  ---->  has 50% of identical answers with student with name Studentas39
+Studentas11  ---->  has 50% of identical answers with student with name Studentas2
+Studentas51  ---->  has 50% of identical answers with student with name Studentas43
+Studentas14  ---->  has 50% of identical answers with student with name Studentas5
+Studentas61  ---->  has 50% of identical answers with student with name Studentas53
+Studentas37  ---->  has 50% of identical answers with student with name Studentas28
+Studentas9  ---->  has 43% of identical answers with student with name Studentas2
+Studentas46  ---->  has 43% of identical answers with student with name Studentas38
+Studentas47  ---->  has 43% of identical answers with student with name Studentas48
+Studentas56  ---->  has 43% of identical answers with student with name Studentas48
+Studentas53  ---->  has 43% of identical answers with student with name Studentas46
+Studentas60  ---->  has 43% of identical answers with student with name Studentas53
+Studentas21  ---->  has 43% of identical answers with student with name Studentas12
+Studentas32  ---->  has 43% of identical answers with student with name Studentas31
+Studentas38  ---->  has 43% of identical answers with student with name Studentas29
+Studentas39  ---->  has 43% of identical answers with student with name Studentas30
+Studentas5  ---->  has 37% of identical answers with student with name Studentas6
+Studentas45  ---->  has 37% of identical answers with student with name Studentas37
+Studentas1  ---->  has 37% of identical answers with student with name Studentas2
+Studentas2  ---->  has 37% of identical answers with student with name Studentas1
+Studentas54  ---->  has 37% of identical answers with student with name Studentas46
+Studentas18  ---->  has 37% of identical answers with student with name Studentas19
+Studentas20  ---->  has 37% of identical answers with student with name Studentas21
+Studentas25  ---->  has 37% of identical answers with student with name Studentas26
+Studentas26  ---->  has 37% of identical answers with student with name Studentas25
+Studentas34  ---->  has 37% of identical answers with student with name Studentas25
+Studentas44  ---->  has 31% of identical answers with student with name Studentas43
+Studentas3  ---->  has 31% of identical answers with student with name Studentas2
+Studentas41  ---->  has 31% of identical answers with student with name Studentas42
+Studentas4  ---->  has 31% of identical answers with student with name Studentas5
+Studentas42  ---->  has 31% of identical answers with student with name Studentas34
+Studentas57  ---->  has 31% of identical answers with student with name Studentas49
+Studentas62  ---->  has 31% of identical answers with student with name Studentas61
+Studentas27  ---->  has 31% of identical answers with student with name Studentas18
+Studentas50  ---->  has 25% of identical answers with student with name Studentas41
+Studentas15  ---->  has 25% of identical answers with student with name Studentas6
+Studentas24  ---->  has 25% of identical answers with student with name Studentas9
+Studentas33  ---->  has 25% of identical answers with student with name Studentas26
+Studentas8  ---->  has 18% of identical answers with student with name Studentas7
+Studentas10  ---->  has 18% of identical answers with student with name Studentas9
+Studentas55  ---->  has 18% of identical answers with student with name Studentas47
+Studentas16  ---->  has 18% of identical answers with student with name Studentas7
+Studentas17  ---->  has 18% of identical answers with student with name Studentas15
+Studentas22  ---->  has 18% of identical answers with student with name Studentas12
+Studentas23  ---->  has 18% of identical answers with student with name Studentas9

@@ -159,6 +159,7 @@ public class Exam {
          directory.mkdirs();
       }
       BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + DETAILED_REPORT_FILENAME));
+      writer.write(DETAILED_REPORTS_HEADER);
       outputReports.forEach( (k,v) -> {
                try {
                   writer.write(k + "\t\t" + v + "\n");
@@ -192,7 +193,7 @@ public class Exam {
                         Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)
                   );
 
-      BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/aggregatedReports.txt"));
+      BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + AGGREGATED_REPORT_FILENAME));
       writer.write(AGGREGATED_REPORTS_HEADER);
       aggregatedReports.forEach((k,v) -> {
          try {
