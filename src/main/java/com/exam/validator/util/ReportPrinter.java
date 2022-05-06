@@ -24,8 +24,8 @@ public class ReportPrinter {
         writer.write(AGGREGATED_REPORT_HEADER);
         aggregatedReport.forEach((k, v) -> {
             try {
-                writer.write(k + "  ---->  has " + v.getPercentageOfIdenticalAnswersWithSuspectedNeighbour() + "% of identical answers "
-                        + "with student with name " + v.getFromWhomThisStudentCopied() + "\n");
+				writer.write(String.format("%-11.11s %60s", k, "  ---->  has " + v.getPercentageOfIdenticalAnswersWithSuspectedNeighbour() + "% of identical answers "
+                        + "with student with name " + v.getFromWhomThisStudentCopied() + "\n"));		
 
             } catch (IOException e) {
                 e.printStackTrace();
