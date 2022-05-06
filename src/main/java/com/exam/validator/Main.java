@@ -60,6 +60,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
+        System.out.println("running the application");
         Exam exam = new Exam();
         ReportPrinter.printDetailedReport(exam);
         ReportPrinter.printAggregatedReport(exam);
