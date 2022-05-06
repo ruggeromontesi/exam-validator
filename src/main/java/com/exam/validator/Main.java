@@ -1,14 +1,10 @@
 package com.exam.validator;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.exam.validator.entity.Exam;
-import com.exam.validator.entity.Student;
-import com.exam.validator.util.CSVReader;
 import com.exam.validator.util.ReportPrinter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -59,11 +55,10 @@ public class Main {
         correctAnswers.put(16, "a");
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         System.out.println("running the application");
-        Exam exam = new Exam();
-        //ReportPrinter.printDetailedReport(exam);
-        //ReportPrinter.printAggregatedReport(exam);
+        Exam exam = new Exam(args);
+        ReportPrinter.printReports(exam);
     }
 }
 

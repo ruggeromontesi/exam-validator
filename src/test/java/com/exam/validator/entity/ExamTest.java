@@ -67,7 +67,7 @@ public class ExamTest {
    @Test
    public void testDetermineCheatingStudentList(){
 
-      exam.getCheatingStudentList().forEach(System.out::println);
+      exam.getThresholdBasedCheatingStudentList().forEach(System.out::println);
    }
 
    @Test

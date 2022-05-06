@@ -2,39 +2,48 @@ package com.exam.validator.entity;
 
 import com.exam.validator.util.CSVReader;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.exam.validator.constants.Constants.AUDITORIUM_NUMBER_OF_COLUMNS;
+import static com.exam.validator.constants.Constants.CHEATING_THRESHOLD;
 
 public class Exam {
-   private int cheatingThreshold = 8;
+   private int cheatingThreshold;
    private final List<Student> studentList = CSVReader.parse();
-   private final List<Student> cheatingStudentList = determineCheatingStudentList();
+   private List<Student> thresholdBasedCheatingStudentList;
    private Map<String, Map<String,Integer>> detailedReport;
    private  Map<String,Detail> aggregatedReport;
 
-   public Exam(int cheatingThreshold) {
-      this();
-      this.cheatingThreshold = cheatingThreshold;
-   }
-
-   public Exam() {
-       try {
-           generateDetailedReports();
-           generateAggregatedReport();
-       } catch (IOException e) {
-           e.printStackTrace();
+    /**
+     * The constructor accepts a vararg parameter of type String.
+     * If no String is passed, or if it cannot be parsed to extract an integer , or if the String can be parsed but the
+     * integer is either lower than 0 or higher than 16, a predefined threshold is used.
+     * @param args A String containing an integer number representing the threshold for determining if the student
+     * has cheated. If the students has a number of answers identical to a neighbour he is considered to have cheated.
+     */
+   public Exam(String... args) {
+       if(args.length == 0) {
+           cheatingThreshold = CHEATING_THRESHOLD;
+       } else {
+           try {
+               int userThreshold = Integer.parseInt(args[0]);
+               cheatingThreshold = (userThreshold > 0 && userThreshold < 17) ? userThreshold : CHEATING_THRESHOLD;
+           } catch(NumberFormatException ex) {
+               cheatingThreshold = CHEATING_THRESHOLD;
+           }
        }
-    }
+       generateDetailedReports();
+       generateAggregatedReport();
+       generateCheatingStudentList();
+   }
 
    public List<Student> getStudentList() {
       return studentList;
    }
 
-   public List<Student> getCheatingStudentList() {
-      return cheatingStudentList;
+   public List<Student> getThresholdBasedCheatingStudentList() {
+      return thresholdBasedCheatingStudentList;
    }
 
    public Map<String, Map<String, Integer>> getDetailedReport() {
@@ -45,6 +54,17 @@ public class Exam {
         return aggregatedReport;
     }
 
+    public int getCheatingThreshold() {
+        return cheatingThreshold;
+    }
+
+    /**
+     * Given a coordinate this method determines the Student sitting at this specific coordinate and wraps it within
+     * an Optional.
+     * If no student with the given position is present an empty optional is returned.
+     * @param coordinate the coordinate from which is required to get the relevant Student instance.
+     * @return the Student with sitting location equal to the given coordinate.
+     */
    Optional<Student> getByCoordinate(String coordinate) {
       return studentList.stream().filter(
             student -> student.getSittingLocation().equals(coordinate)
@@ -60,6 +80,12 @@ public class Exam {
             ));
    }
 
+    /**
+     * This method determines, given a Student, the list of coordinates of neighbouring positions, i.e.: the two
+     * neighbouring positions in the same row and the three positions in front of the considered student.
+     * @param thisStudent The students for which is required to determine the neighbouring positions.
+     * @return the list of neighbouring positions.
+     */
    public List<String> getCoordinatesOfNeighbouringSittingLocations(Student thisStudent) {
       int rowIndex = Integer.parseInt(thisStudent.getSittingLocation().substring(0,1));
       int colIndex = Integer.parseInt(thisStudent.getSittingLocation().substring(2,3));
@@ -87,6 +113,15 @@ public class Exam {
       return possibleCoordinateOfNeighbours;
    }
 
+    /**
+     * This method, given a student, determines the list of other students from which he could have copied during
+     * the exam. In this list are only included the two neighbouring students in the same row and the three students
+     * in front of the considered student.
+     * The method accounts for situation where no students are seated in the candidate positions and for the border
+     * positions where less than five neighbouring students are present.
+     * @param thisStudent the student for which is determined the list of neighbours.
+     * @return the list of neighbours.
+     */
     List<Student> getNeighboursList(Student thisStudent) {
       List<String> possibleCoordinateOfNeighbours = getCoordinatesOfNeighbouringSittingLocations(thisStudent);
       return possibleCoordinateOfNeighbours
@@ -97,6 +132,13 @@ public class Exam {
             .collect(Collectors.toList());
    }
 
+    /**
+     * This method determines if the student has cheated based on the amount of answers identical to his neighbours.
+     * The method, given a student, determines his neighbours and check for each of them the amount of identical answers.
+     * If the count is higher than a predefined threshold the student is assumed to have cheated during the exam.
+     * @param thisStudent the student for which is required to determine if he has cheated or not.
+     * @return if this student has cheated or not.
+     */
    public boolean isThisStudentCheating(Student thisStudent) {
       List<Student> neighboursList = getNeighboursList(thisStudent);
       return neighboursList
@@ -107,13 +149,35 @@ public class Exam {
                   .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count() > cheatingThreshold);
    }
 
-   public List<Student> determineCheatingStudentList(){
-      return studentList.stream().filter(this::isThisStudentCheating).collect(Collectors.toList());
+    /**
+     * Given the list of students this method gathers in a list all students assumed to have cheated as determined
+     * in the method  {@link #isThisStudentCheating(Student thisStudent) isThisStudentCheating}
+     */
+   public void generateCheatingStudentList(){
+       thresholdBasedCheatingStudentList = studentList.stream().filter(this::isThisStudentCheating).collect(Collectors.toList());
    }
 
-   private void generateDetailedReports() throws IOException {
-       Comparator<String> stringComparator = Comparator.comparingInt(s -> Integer.parseInt(s.substring(s.indexOf('s') + 1)));
+    /**
+     * This method iterates over the list of student and, for each of them, creates a Map where keys are the names of
+     * neighbouring students and values are the numbers of identical answers.
+     * The map is sorted according the integer at the end of the String representing student name as per the given input.
+     */
+   private void generateDetailedReports()  {
+       Comparator<String> stringComparator = Comparator.comparingInt( s -> Integer.parseInt(s.substring(s.indexOf('s') + 1)));
+       /*Note: if more flexibility is required the commented comparator
+        If more flexibility is required is also given, commented, implementation of a comparator that first attempt
+        * to sort students in the same way as in the current implementation and then, if this approach is not succesful
+        * simply implements lexicographical comparator.
 
+       Comparator<String> stringComparator = (s1, s2) -> {
+           try {
+               int id1 = Integer.parseInt(s1.substring(s1.indexOf('s') + 1));
+               int id2 = Integer.parseInt(s2.substring(s1.indexOf('s') + 1));
+               return id1 - id2;
+           } catch (NumberFormatException ex) {
+               return s1.compareTo(s2);
+           }
+       };*/
       Map<String, Map<String,Integer>> outputReports = new TreeMap<>(stringComparator);
       studentList.forEach(
            student -> {
@@ -137,7 +201,14 @@ public class Exam {
       detailedReport = outputReports;
    }
 
-   public void generateAggregatedReport() throws IOException{
+    /**
+     * This method creates the aggregated report. Information used in the detailed report are retrieved to produce a new
+     * Map where keys are student names and values are Detail entity, which contains information on the maximum amount
+     * of answers identical to answers of neighbours.
+     * The map is then rearranged and sorted by values, in decreasing order, according to the maximum amount of answers
+     * identical to  answers of neighbours.
+     */
+   public void generateAggregatedReport() {
       Map<String,Detail> tempAggregatedReports = new HashMap<>();
       detailedReport.forEach(
             (k,v) -> {

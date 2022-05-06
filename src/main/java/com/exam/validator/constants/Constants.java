@@ -13,14 +13,16 @@ public interface Constants {
 
    String AGGREGATED_REPORT_FILENAME = "aggregated-report.txt";
 
-   String DETAILED_REPORTS_HEADER  = "STUDENT DETAILED REPORT\n"+
+   String THRESHOLD_BASED_REPORT_FILENAME = "threshold-based-report.txt";
+
+   String DETAILED_REPORT_HEADER = "STUDENT DETAILED REPORT\n"+
          "This file provides a detailed report for each student. A single record is shown on each line.\n\n" +
          "Each line consists of the following:\n" +
          "1) Student name.\n" +
          "2) A map where are listed the names of neighboring students and the amount of identical answers with them\n"+
          " \n\n\n";
 
-   String AGGREGATED_REPORTS_HEADER  = "STUDENT AGGREGATED REPORT\n" +
+   String AGGREGATED_REPORT_HEADER = "STUDENT AGGREGATED REPORT\n" +
            "This file provides an aggregated report for each student. A single record is shown on each line.\n\n" +
            "Each line consists of the following:\n" +
            "1) Student name.\n" +
@@ -28,5 +30,13 @@ public interface Constants {
            "identical answers with all the neighbours, is then considered the highest percentage.\n"+
            "3)Name of the neighbouring student who has the highest percentage of similar answers with the considered student."+
            " \n\n\n";
+
+   String THRESHOLD_BASED_REPORT_HEADER  = "THRESHOLD BASED CHEATING STUDENT LIST\n" +
+           "This file provides a list of cheating students defined so according to the amount of answers identical\n" +
+           "to neighbours. If this student answered in the same way, as neighbour did, to an amount of questions \n" +
+           "higher than a pre-defined threshold then the student is considered to have been cheating.\n" +
+           " \n";
+
+
 
 }
