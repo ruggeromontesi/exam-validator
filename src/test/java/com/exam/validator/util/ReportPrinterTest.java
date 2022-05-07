@@ -30,6 +30,4 @@ public class ReportPrinterTest {
         ReportPrinter.printThresholdBasedCheatingStudentList(exam);
 
     }
-
-
 }

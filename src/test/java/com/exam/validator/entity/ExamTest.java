@@ -4,9 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class ExamTest {
@@ -55,7 +52,6 @@ public class ExamTest {
 
    }
 
-
    @Test
    public void testGetNeighboursList(){
       List<Student> studentList = exam.getStudentList();
@@ -84,14 +80,18 @@ public class ExamTest {
       Map<Student,Integer> mapForStudent1 = new HashMap<>();
       mapForStudent1.put(exam.getStudentList().get(1),6);
       Assert.assertEquals(mapForStudent1, exam.getAnswersComparisonForThisStudent(exam.getStudentList().get(0)));
-
-
    }
 
-
-
+   @Test
    public void testComparator(){
-
+      List<Student> studentList = exam.getStudentList();
+      Student student1 = studentList.get(0);
+      Student student6 = studentList.get(5);
+      Map<Student, Map<Student,Integer>> newOutputReports = new TreeMap<>(exam.getStudentComparator());
+      newOutputReports.put(student1,exam.getAnswersComparisonForThisStudent(student1) );
+      newOutputReports.put(student6,exam.getAnswersComparisonForThisStudent(student6) );
+      //student 6 has highest numeber of identical answers then should come first in the map.
+      newOutputReports.entrySet().stream().limit(1).forEach(e -> Assert.assertTrue(e.getKey().getName().equals("Studentas6")));
    }
 
 }
