@@ -42,8 +42,6 @@ public class ExamTest {
       );
 
       Student student12 = exam.getStudentList().get(11);
-
-
       exam.getCoordinatesOfNeighbouringSittingLocations(student12).forEach(
               coordinate ->
               Assert.assertTrue(coordinatesList.contains(coordinate))

@@ -140,6 +140,11 @@ public class Exam {
                   .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count() > cheatingThreshold);
    }
 
+    /***
+     * Creates a map where keys are the neighbouring students and values the amount fo identical answers
+     * @param thisStudent student for which the map is generated
+     * @return map Student/ amount of identical values
+     */
     public Map<Student,Integer> getAnswersComparisonForThisStudent(Student thisStudent) {
         Map<Student,Integer> singleStudentReport = new HashMap<>();
         getNeighboursList(thisStudent).forEach(
@@ -154,6 +159,4 @@ public class Exam {
         );
         return singleStudentReport;
     }
-
-
 }
