@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static com.exam.validator.constants.Constants.*;
 
@@ -22,14 +23,13 @@ public class ReportPrinter {
     }
 
     public static void printAggregatedReport(Exam exam) throws IOException {
-
-        Map<Student, Map<Student,Integer>> newOutputReports = new TreeMap<>(exam.getStudentComparator());
-        exam.getStudentList().stream().forEach(student -> newOutputReports.put(student, exam.getAnswersComparisonForThisStudent(student)));
+        Map<Student, Map<Student,Integer>> report = new TreeMap<>(exam.getStudentComparator());
+        exam.getStudentList().forEach(student -> report.put(student, exam.getAnswersComparisonForThisStudent(student)));
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + AGGREGATED_REPORT_FILENAME));
         writer.write(AGGREGATED_REPORT_HEADER);
-        exam.getStudentList().stream().forEach(student -> newOutputReports.put(student, exam.getAnswersComparisonForThisStudent(student)));
-        newOutputReports.entrySet().stream().forEach(
+        exam.getStudentList().forEach(student -> report.put(student, exam.getAnswersComparisonForThisStudent(student)));
+        report.entrySet().forEach(
 
                 e -> {
                     Map.Entry<Student,Integer> maxEntry = exam.getAnswersComparisonForThisStudent(e.getKey())
@@ -52,7 +52,7 @@ public class ReportPrinter {
         BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + DETAILED_REPORT_FILENAME));
         writer.write(DETAILED_REPORT_HEADER);
 
-        exam.getStudentList().stream().forEach(student -> {
+        exam.getStudentList().forEach(student -> {
             try {
                 writer.write("Comparison of identical answers for " +student.getName());
                 exam.getAnswersComparisonForThisStudent(student).entrySet().forEach(e -> {
@@ -88,7 +88,7 @@ public class ReportPrinter {
         BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + THRESHOLD_BASED_REPORT_FILENAME));
         writer.write(THRESHOLD_BASED_REPORT_HEADER);
         writer.write("The predefined threshold is equal to " + exam.getCheatingThreshold() + "\n\n\n");
-        exam.getThresholdBasedCheatingStudentList().forEach(student -> {
+        exam.getStudentList().stream().filter(exam::isThisStudentCheating).collect(Collectors.toList()).forEach(student -> {
             try {
                 writer.write(student.toString() + "\n\n\n");
             } catch (IOException e) {

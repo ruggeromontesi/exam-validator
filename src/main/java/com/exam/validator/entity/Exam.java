@@ -3,7 +3,6 @@ package com.exam.validator.entity;
 import com.exam.validator.util.CSVReader;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
@@ -13,11 +12,8 @@ import static com.exam.validator.constants.Constants.CHEATING_THRESHOLD;
 public class Exam {
    private int cheatingThreshold;
    private final List<Student> studentList = CSVReader.parse();
-   private List<Student> thresholdBasedCheatingStudentList;
-
-    private  ToIntFunction<Student> studentToIntFunction = student ->{
+    private final ToIntFunction<Student> studentToIntFunction = student ->{
         Map<Student,Integer> singleStudentReport = new HashMap<>();
-
         getNeighboursList(student).forEach(
                 neighbourStudent -> {
                     int amountOfIdenticalAnswers = (int) neighbourStudent
@@ -28,26 +24,24 @@ public class Exam {
                     singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
                 }
         );
-
         return singleStudentReport.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
-
-
     } ;
 
-   private Comparator<Student> studentComparator = Comparator.comparingInt(studentToIntFunction).reversed().thenComparing(Student::getName);
-
-    public ToIntFunction<Student> getStudentToIntFunction() {
-        return studentToIntFunction;
-    }
+    private final Comparator<Student> studentComparator = Comparator.comparingInt(studentToIntFunction).reversed().thenComparing(Student::getName);
 
     public Comparator<Student> getStudentComparator() {
         return studentComparator;
     }
+    public int getCheatingThreshold() {
+        return cheatingThreshold;
+    }
+
+    public List<Student> getStudentList() {
+        return studentList;
+    }
 
     /**
-     * The constructor accepts a vararg parameter of type String.
-     * If no String is passed, or if it cannot be parsed to extract an integer , or if the String can be parsed but the
-     * integer is either lower than 0 or higher than 16, a predefined threshold is used.
+     * Accepts a vararg parameter of type String. If no or invalid String is passed a predefined threshold is used.
      * @param args A String containing an integer number representing the threshold for determining if the student
      * has cheated. If the students has a number of answers identical to a neighbour he is considered to have cheated.
      */
@@ -62,26 +56,10 @@ public class Exam {
                cheatingThreshold = CHEATING_THRESHOLD;
            }
        }
-
-       generateCheatingStudentList();
    }
-
-   public List<Student> getStudentList() {
-      return studentList;
-   }
-
-   public List<Student> getThresholdBasedCheatingStudentList() {
-      return thresholdBasedCheatingStudentList;
-   }
-
-    public int getCheatingThreshold() {
-        return cheatingThreshold;
-    }
 
     /**
-     * Given a coordinate this method determines the Student sitting at this specific coordinate and wraps it within
-     * an Optional.
-     * If no student with the given position is present an empty optional is returned.
+     * Given a coordinate it retrieves the Student sitting at this coordinate and wraps it within an Optional.
      * @param coordinate the coordinate from which is required to get the relevant Student instance.
      * @return the Student with sitting location equal to the given coordinate.
      */
@@ -101,8 +79,7 @@ public class Exam {
    }
 
     /**
-     * This method determines, given a Student, the list of coordinates of neighbouring positions, i.e.: the two
-     * neighbouring positions in the same row and the three positions in front of the considered student.
+     * Determines the list of coordinates of neighbouring positions for the Student passed as parameter .
      * @param thisStudent The students for which is required to determine the neighbouring positions.
      * @return the list of neighbouring positions.
      */
@@ -134,9 +111,7 @@ public class Exam {
    }
 
     /**
-     * This method, given a student, determines the list of other students from which he could have copied during
-     * the exam. In this list are only included the two neighbouring students in the same row and the three students
-     * in front of the considered student.
+     * Determines the list of  students neighbouring to the student passed as parameter.
      * @param thisStudent the student for which is determined the list of neighbours.
      * @return the list of neighbours.
      */
@@ -151,7 +126,7 @@ public class Exam {
    }
 
     /**
-     * This method determines if the student has cheated based on the amount of answers identical to his neighbours.
+     * Determines if the student has cheated based on the amount of answers identical to his neighbours.
      * @param thisStudent the student for which is required to determine if he has cheated or not.
      * @return if this student has cheated or not.
      */
@@ -164,15 +139,6 @@ public class Exam {
                   .stream()
                   .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count() > cheatingThreshold);
    }
-
-    /**
-     * Given the list of students this method gathers in a list all students assumed to have cheated as determined
-     * in the method  {@link #isThisStudentCheating(Student thisStudent) isThisStudentCheating}
-     */
-   public void generateCheatingStudentList(){
-       thresholdBasedCheatingStudentList = studentList.stream().filter(this::isThisStudentCheating).collect(Collectors.toList());
-   }
-
 
     public Map<Student,Integer> getAnswersComparisonForThisStudent(Student thisStudent) {
         Map<Student,Integer> singleStudentReport = new HashMap<>();

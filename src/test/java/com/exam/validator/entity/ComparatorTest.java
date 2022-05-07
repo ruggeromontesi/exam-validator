@@ -63,7 +63,6 @@ public class ComparatorTest {
     @Test
     public void testGetSingleStudentReport(){
         Student student1 = getByName("Studentas1").get();
-        //exam.getAnswersComparisonForThisStudent(student1).entrySet().forEach(e -> System.out.print( "  {" + e.getKey().getName() + "    " + e.getValue() + "}") );
         exam.getStudentList().stream().forEach(student -> {
             System.out.print("Comparison of identical answers for " +student.getName());
             exam.getAnswersComparisonForThisStudent(student).entrySet().forEach(e -> System.out.print( "  {" + e.getKey().getName() + "---" + e.getValue() + "}\t") );

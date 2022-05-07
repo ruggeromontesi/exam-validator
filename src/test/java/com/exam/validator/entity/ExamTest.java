@@ -1,14 +1,13 @@
 package com.exam.validator.entity;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class ExamTest {
 
@@ -25,88 +24,74 @@ public class ExamTest {
    }
 
    @Test
-   public void testGetByName(){
-      for(int i= 1; i <63; i++){
-         String name = "Studentas"+i;
-         Assert.assertEquals(name,getByName(name).get().getName() );
-      }
+   public void testGetByCoordinate(){
+      String coordinateStudent29 = "4.5";
+      Assert.assertEquals("Studentas29", exam.getByCoordinate(coordinateStudent29).get().getName());
    }
 
    @Test
-   public void testGetNeighboursList(){
-      String studentName = "Studentas12";
-      List<Student> neighbours = Arrays.asList(
-            getByName("Studentas3").get(),
-            getByName("Studentas4").get(),
-            getByName("Studentas5").get(),
-            getByName("Studentas11").get(),
-            getByName("Studentas13").get()
+   public void testGetCoordinatesOfNeighbouringSittingLocations() {
+      String sittingLocationStudent3 = "1.6";
+      String sittingLocationStudent4 = "1.5";
+      String sittingLocationStudent5 = "1.4";
+      String sittingLocationStudent11 = "2.6";
+      String sittingLocationStudent13 = "2.4";
+      List<String> coordinatesList = Arrays.asList(
+              sittingLocationStudent3,
+              sittingLocationStudent4,
+              sittingLocationStudent5,
+              sittingLocationStudent11,
+              sittingLocationStudent13
       );
-      Student studentA = getByName(studentName).get();
+
+      Student student12 = exam.getStudentList().get(11);
+
+
+      exam.getCoordinatesOfNeighbouringSittingLocations(student12).forEach(
+              coordinate ->
+              Assert.assertTrue(coordinatesList.contains(coordinate))
+      );
+      Assert.assertEquals(5,exam.getCoordinatesOfNeighbouringSittingLocations(student12).size());
+
+   }
+
+
+   @Test
+   public void testGetNeighboursList(){
+      List<Student> studentList = exam.getStudentList();
+      List<Student> neighbours = Arrays.asList(
+              studentList.get(3),
+              studentList.get(4),
+              studentList.get(5),
+              studentList.get(11),
+              studentList.get(13)
+      );
+
+      Student student13 = studentList.get(12);
 
       Assert.assertEquals(neighbours.size(),
-            neighbours.stream().filter(student -> exam.getNeighboursList(studentA).contains(student) ).count());
-
+            neighbours.stream().filter(student -> exam.getNeighboursList(student13).contains(student) ).count());
    }
 
    @Test
    public void testIsThisStudentCheating() {
-      Exam exam = new Exam();
-      exam.getStudentList().forEach( student -> {
-         System.out.println("*************************************************");
-         if(exam.isThisStudentCheating(student)) {
-            System.out.println("The student " + student.getName() + " is cheating");
-         } else {
-            System.out.println("The student " + student.getName() + " is not cheating");
-         }
-         System.out.println("*************************************************");
-      });
-
+      Student student12 = exam.getStudentList().get(11);
+      Assert.assertTrue(exam.isThisStudentCheating(student12));
    }
 
    @Test
-   public void testDetermineCheatingStudentList(){
+   public void testGetAnswersComparisonForThisStudent(){
+      Map<Student,Integer> mapForStudent1 = new HashMap<>();
+      mapForStudent1.put(exam.getStudentList().get(1),6);
+      Assert.assertEquals(mapForStudent1, exam.getAnswersComparisonForThisStudent(exam.getStudentList().get(0)));
 
-      exam.getThresholdBasedCheatingStudentList().forEach(System.out::println);
-   }
-
-   @Test
-   public void testGenerateReports() {
-      System.out.println(exam.getDetailedReport());
-      exam.getDetailedReport().forEach((k, v) -> System.out.println(k + "\t\t" + v + "\n\n"));
 
    }
 
-
-
-
-   @Test
-   public void testAgainGenerateReports(){
-      Exam exam = new Exam();
-      exam.printNewDetailedReports();
-   }
 
 
    public void testComparator(){
 
-   }
-
-   private Optional<Student> getByName(String name) {
-      List<Student> studentList = exam.getStudentList();
-
-      return studentList.stream().filter(
-              student -> student.getName().equals(name)
-      ).collect(
-              Collectors.collectingAndThen(
-                      Collectors.toList(),
-                      list -> {
-                         if (list.size() > 1) {
-                            throw new RuntimeException("More than a student with with same name!");
-                         }
-                         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
-                      }
-              )
-      );
    }
 
 }
