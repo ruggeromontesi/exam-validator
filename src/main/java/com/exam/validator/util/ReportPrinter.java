@@ -48,7 +48,6 @@ public class ReportPrinter {
     }
     public static void printDetailedReport(Exam exam) throws IOException {
 
-        Map<Student, Map<Student,Integer>> newOutputReports = new TreeMap<>(exam.getStudentComparator());
         BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + DETAILED_REPORT_FILENAME));
         writer.write(DETAILED_REPORT_HEADER);
 

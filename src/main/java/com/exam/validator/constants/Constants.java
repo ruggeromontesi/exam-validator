@@ -26,9 +26,9 @@ public interface Constants {
            "This file provides an aggregated report for each student. A single record is shown on each line.\n\n" +
            "Each line consists of the following:\n" +
            "1) Student name.\n" +
-           "2) highest percentage of answers identical to neighbours, i.e.:  is first calculated the percentage of \n" +
-           "identical answers with all the neighbours, is then considered the highest percentage.\n"+
-           "3)Name of the neighbouring student who has the highest percentage of similar answers with the considered student."+
+           "2) highest number of answers identical to neighbours, i.e.:  is first calculated the amount of \n" +
+           "identical answers with all the neighbours, is then considered the highest value.\n"+
+           "3)Name of the neighbouring student who has the highest number of similar answers with the considered student."+
            " \n\n\n";
 
    String THRESHOLD_BASED_REPORT_HEADER  = "THRESHOLD BASED CHEATING STUDENT LIST\n" +

@@ -7,16 +7,16 @@ of their questions identical to the answers of one of their neighbours bigger th
 amount.
 The students considered "cheaters" are listed within file threshold-based-report.txt located within 
 ./target/generated-reports.
-The report indicates the predefined amount considered to create the list of cheating students.
+The report indicates the predefined amount to create the list of cheating students.
 This amount can be set by the user, at the moment of launching application, through a command line
 parameter.(See section installation and running for more details).
 
-2)Sorting student according to similarities in the answeres with one of their  neighbours.
+2)Sorting student according to similarities in the answers with one of their  neighbours.
 The second approach is a softer one in that it analyzes and sort the students according to the 
-amount of of their questions identical to the answers of one of their neighbours.
+amount of their questions identical to the answers of one of their neighbours.
 This sorted list is available within file aggregated-report.txt.
 
-In addition, a third report is generated, showing for each students the amount of identical answers
+In addition, a third report is generated, showing for each student the amount of identical answers
 in comparison to each of the neighbours.
 ###################################################################################################
 
