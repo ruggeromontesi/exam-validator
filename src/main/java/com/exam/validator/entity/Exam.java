@@ -3,6 +3,8 @@ package com.exam.validator.entity;
 import com.exam.validator.util.CSVReader;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static com.exam.validator.constants.Constants.AUDITORIUM_NUMBER_OF_COLUMNS;
@@ -13,7 +15,38 @@ public class Exam {
    private final List<Student> studentList = CSVReader.parse();
    private List<Student> thresholdBasedCheatingStudentList;
    private Map<String, Map<String,Integer>> detailedReport;
+   private Map<Student, Map<Student,Integer>> newDetailedReport;
    private  Map<String,Detail> aggregatedReport;
+
+
+    private  ToIntFunction<Student> studentToIntFunction = student ->{
+        Map<Student,Integer> singleStudentReport = new HashMap<>();
+
+        getNeighboursList(student).forEach(
+                neighbourStudent -> {
+                    int amountOfIdenticalAnswers = (int) neighbourStudent
+                            .getAnswers()
+                            .entrySet()
+                            .stream()
+                            .filter(e -> e.getValue().equals(student.getAnswers().get(e.getKey()))).count();
+                    singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
+                }
+        );
+
+        return singleStudentReport.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
+
+
+    } ;
+
+   private Comparator<Student> studentComparator = Comparator.comparingInt(studentToIntFunction).reversed().thenComparing(Student::getName);
+
+    public ToIntFunction<Student> getStudentToIntFunction() {
+        return studentToIntFunction;
+    }
+
+    public Comparator<Student> getStudentComparator() {
+        return studentComparator;
+    }
 
     /**
      * The constructor accepts a vararg parameter of type String.
@@ -162,7 +195,7 @@ public class Exam {
      * neighbouring students and values are the numbers of identical answers.
      * The map is sorted according the integer at the end of the String representing student name as per the given input.
      */
-   private void generateDetailedReports()  {
+   public void generateDetailedReports()  {
        Comparator<String> stringComparator = Comparator.comparingInt( s -> Integer.parseInt(s.substring(s.indexOf('s') + 1)));
        /*Note: if more flexibility is required the commented comparator
         If more flexibility is required is also given, commented, implementation of a comparator that first attempt
@@ -199,6 +232,60 @@ public class Exam {
            }
       );
       detailedReport = outputReports;
+   }
+
+   public void printNewDetailedReports(){
+       ToIntFunction<Student> toInt = student ->{
+           Map<Student,Integer> singleStudentReport = new HashMap<>();
+
+           getNeighboursList(student).forEach(
+                   neighbourStudent -> {
+                       int amountOfIdenticalAnswers = (int) neighbourStudent
+                               .getAnswers()
+                               .entrySet()
+                               .stream()
+                               .filter(e -> e.getValue().equals(student.getAnswers().get(e.getKey()))).count();
+                       singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
+                   }
+           );
+
+           return singleStudentReport.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
+
+
+       } ;
+
+       Comparator<Student> studentComparator = Comparator.comparingInt(toInt).thenComparing(Student::getName);
+       Map<Student, Map<Student,Integer>> newOutputReports = new TreeMap<>(studentComparator);
+       studentList.forEach(student -> {
+           Map<Student,Integer> singleStudentReport = new HashMap<>();
+           getNeighboursList(student).forEach(
+                   neighbourStudent -> {
+                       int amountOfIdenticalAnswers = (int) neighbourStudent
+                               .getAnswers()
+                               .entrySet()
+                               .stream()
+                               .filter(e -> e.getValue().equals(student.getAnswers().get(e.getKey()))).count();
+                       singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
+                   }
+           );
+
+           newOutputReports.put(student,singleStudentReport);
+
+       });
+
+      // newOutputReports.entrySet().stream().forEach(           e -> System.out.println(e.getKey().getName() +"  " + e.getValue()));
+
+       int a = 2;
+
+       for(Map.Entry<Student,Map<Student,Integer>> entry : newOutputReports.entrySet()) {
+           System.out.print("\n [" + entry.getKey().getName());
+           Map<Student,Integer> innerMap = entry.getValue();
+           for(Map.Entry<Student,Integer> innerMapEntry : innerMap.entrySet()){
+               System.out.print( "  {" + innerMapEntry.getKey().getName()  +"---"+ innerMapEntry.getValue() + "}");
+           }
+           System.out.print("]\n");
+       }
+
    }
 
     /**
@@ -249,5 +336,21 @@ public class Exam {
          this.fromWhomThisStudentCopied = fromWhomThisStudentCopied;
          this.percentageOfIdenticalAnswersWithSuspectedNeighbour = percentageOfIdenticalAnswersWithSuspectedNeighbour;
       }
+   }
+
+
+   public Map<Student,Integer> getAnswersComparisonForThisStudent(Student thisStudent) {
+       Map<Student,Integer> singleStudentReport = new HashMap<>();
+       getNeighboursList(thisStudent).forEach(
+               neighbourStudent -> {
+                   int amountOfIdenticalAnswers = (int) neighbourStudent
+                           .getAnswers()
+                           .entrySet()
+                           .stream()
+                           .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count();
+                   singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
+               }
+       );
+       return singleStudentReport;
    }
 }

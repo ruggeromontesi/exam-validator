@@ -1,0 +1,18 @@
+THRESHOLD BASED CHEATING STUDENT LIST
+This file provides a list of cheating students.A student is defined as cheating student when the amount of his answers that are identical
+to the answers of one of his neighbours is higher than a pre-set value. 
+The predefined threshold is equal to 11
+
+
+Student[name='Studentas12', sittingLocation='2.5', answers={1=a, 2=b, 3=abef, 4=f, 5=f, 6=d, 7=abe, 8=abcde, 9=e, 10=ab, 11=b, 12=a, 13=ce, 14=be, 15=bdf, 16=a}]
+
+
+Student[name='Studentas13', sittingLocation='2.4', answers={1=a, 2=b, 3=abef, 4=f, 5=f, 6=d, 7=abe, 8=abcde, 9=b, 10=a, 11=b, 12=af, 13=ce, 14=be, 15=bdf, 16=a}]
+
+
+Student[name='Studentas28', sittingLocation='4.4', answers={1=a, 2=b, 3=bef, 4=f, 5=f, 6=d, 7=ac, 8=abcd, 9=abe, 10=ad, 11=b, 12=f, 13=ce, 14=be, 15=cf, 16=a}]
+
+
+Student[name='Studentas29', sittingLocation='4.5', answers={1=a, 2=b, 3=bef, 4=f, 5=f, 6=d, 7=af, 8=abcd, 9=ce, 10=ad, 11=b, 12=f, 13=ce, 14=be, 15=f, 16=a}]
+
+

@@ -84,6 +84,18 @@ public class ExamTest {
 
    }
 
+
+   @Test
+   public void testAgainGenerateReports(){
+      Exam exam = new Exam();
+      exam.printNewDetailedReports();
+   }
+
+
+   public void testComparator(){
+
+   }
+
    private Optional<Student> getByName(String name) {
       List<Student> studentList = exam.getStudentList();
 
