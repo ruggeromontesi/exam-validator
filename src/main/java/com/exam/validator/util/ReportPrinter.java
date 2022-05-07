@@ -1,12 +1,15 @@
 package com.exam.validator.util;
 
 import com.exam.validator.entity.Exam;
+import com.exam.validator.entity.Student;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static com.exam.validator.constants.Constants.*;
 
@@ -19,35 +22,57 @@ public class ReportPrinter {
     }
 
     public static void printAggregatedReport(Exam exam) throws IOException {
-        Map<String, Exam.Detail> aggregatedReport = exam.getAggregatedReport();
+
+        Map<Student, Map<Student,Integer>> newOutputReports = new TreeMap<>(exam.getStudentComparator());
+        exam.getStudentList().stream().forEach(student -> newOutputReports.put(student, exam.getAnswersComparisonForThisStudent(student)));
+
         BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + AGGREGATED_REPORT_FILENAME));
         writer.write(AGGREGATED_REPORT_HEADER);
-        aggregatedReport.forEach((k, v) -> {
-            try {
-				writer.write(String.format("%-11.11s %60s", k, "  ---->  has " + v.getPercentageOfIdenticalAnswersWithSuspectedNeighbour() + "% of identical answers "
-                        + "with student with name " + v.getFromWhomThisStudentCopied() + "\n"));		
+        exam.getStudentList().stream().forEach(student -> newOutputReports.put(student, exam.getAnswersComparisonForThisStudent(student)));
+        newOutputReports.entrySet().stream().forEach(
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        writer.close();
-    }
-    public static void printDetailedReport(Exam exam) throws IOException {
-                Map<String, Map<String,Integer>> detailedReports = exam.getDetailedReport();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + DETAILED_REPORT_FILENAME));
-        writer.write(DETAILED_REPORT_HEADER);
-        detailedReports.forEach( (k,v) -> {
+                e -> {
+                    Map.Entry<Student,Integer> maxEntry = exam.getAnswersComparisonForThisStudent(e.getKey())
+                            .entrySet()
+                            .stream()
+                            .max(Comparator.comparingInt(Map.Entry::getValue)).get();
                     try {
-                        writer.write(k + "\t\t" + v + "\n");
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        writer.write(e.getKey().getName() + " has " + maxEntry.getValue()  + " answers identical to " + maxEntry.getKey().getName() +"\n");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
                 }
         );
+
         writer.close();
     }
+    public static void printDetailedReport(Exam exam) throws IOException {
+
+        Map<Student, Map<Student,Integer>> newOutputReports = new TreeMap<>(exam.getStudentComparator());
+        BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + DETAILED_REPORT_FILENAME));
+        writer.write(DETAILED_REPORT_HEADER);
+
+        exam.getStudentList().stream().forEach(student -> {
+            try {
+                writer.write("Comparison of identical answers for " +student.getName());
+                exam.getAnswersComparisonForThisStudent(student).entrySet().forEach(e -> {
+                    try {
+                        writer.write( "  {" + e.getKey().getName() + "---" + e.getValue() + "}\t");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                writer.write("\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        });
+        writer.close();
+    }
+
+
     public static void printReports(Exam exam) {
         try {
             printThresholdBasedCheatingStudentList(exam);

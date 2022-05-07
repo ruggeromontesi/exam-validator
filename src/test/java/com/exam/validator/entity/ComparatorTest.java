@@ -3,10 +3,7 @@ package com.exam.validator.entity;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ComparatorTest {
@@ -29,7 +26,16 @@ public class ComparatorTest {
         //newOutputReports.entrySet().stream().forEach(e -> System.out.println(e.getKey().getName()));
         newOutputReports.clear();
         exam.getStudentList().stream().forEach(student -> newOutputReports.put(student, exam.getAnswersComparisonForThisStudent(student)));
-        newOutputReports.entrySet().stream().forEach(e -> System.out.println(e.getKey().getName()));
+        newOutputReports.entrySet().stream().forEach(
+
+                e -> {
+                    Map.Entry<Student,Integer> maxEntry = exam.getAnswersComparisonForThisStudent(e.getKey())
+                            .entrySet()
+                            .stream()
+                            .max(Comparator.comparingInt(Map.Entry::getValue)).get();
+                    System.out.println(e.getKey().getName() + " has " + maxEntry.getValue()  + " answers identical to " + maxEntry.getKey().getName() );
+                }
+        );
 
 
 

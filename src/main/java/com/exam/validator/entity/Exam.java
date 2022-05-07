@@ -14,10 +14,6 @@ public class Exam {
    private int cheatingThreshold;
    private final List<Student> studentList = CSVReader.parse();
    private List<Student> thresholdBasedCheatingStudentList;
-   private Map<String, Map<String,Integer>> detailedReport;
-   private Map<Student, Map<Student,Integer>> newDetailedReport;
-   private  Map<String,Detail> aggregatedReport;
-
 
     private  ToIntFunction<Student> studentToIntFunction = student ->{
         Map<Student,Integer> singleStudentReport = new HashMap<>();
@@ -66,8 +62,7 @@ public class Exam {
                cheatingThreshold = CHEATING_THRESHOLD;
            }
        }
-       generateDetailedReports();
-       generateAggregatedReport();
+
        generateCheatingStudentList();
    }
 
@@ -78,14 +73,6 @@ public class Exam {
    public List<Student> getThresholdBasedCheatingStudentList() {
       return thresholdBasedCheatingStudentList;
    }
-
-   public Map<String, Map<String, Integer>> getDetailedReport() {
-      return detailedReport;
-   }
-
-    public Map<String, Detail> getAggregatedReport() {
-        return aggregatedReport;
-    }
 
     public int getCheatingThreshold() {
         return cheatingThreshold;
@@ -150,8 +137,6 @@ public class Exam {
      * This method, given a student, determines the list of other students from which he could have copied during
      * the exam. In this list are only included the two neighbouring students in the same row and the three students
      * in front of the considered student.
-     * The method accounts for situation where no students are seated in the candidate positions and for the border
-     * positions where less than five neighbouring students are present.
      * @param thisStudent the student for which is determined the list of neighbours.
      * @return the list of neighbours.
      */
@@ -167,8 +152,6 @@ public class Exam {
 
     /**
      * This method determines if the student has cheated based on the amount of answers identical to his neighbours.
-     * The method, given a student, determines his neighbours and check for each of them the amount of identical answers.
-     * If the count is higher than a predefined threshold the student is assumed to have cheated during the exam.
      * @param thisStudent the student for which is required to determine if he has cheated or not.
      * @return if this student has cheated or not.
      */
@@ -190,167 +173,21 @@ public class Exam {
        thresholdBasedCheatingStudentList = studentList.stream().filter(this::isThisStudentCheating).collect(Collectors.toList());
    }
 
-    /**
-     * This method iterates over the list of student and, for each of them, creates a Map where keys are the names of
-     * neighbouring students and values are the numbers of identical answers.
-     * The map is sorted according the integer at the end of the String representing student name as per the given input.
-     */
-   public void generateDetailedReports()  {
-       Comparator<String> stringComparator = Comparator.comparingInt( s -> Integer.parseInt(s.substring(s.indexOf('s') + 1)));
-       /*Note: if more flexibility is required the commented comparator
-        If more flexibility is required is also given, commented, implementation of a comparator that first attempt
-        * to sort students in the same way as in the current implementation and then, if this approach is not succesful
-        * simply implements lexicographical comparator.
 
-       Comparator<String> stringComparator = (s1, s2) -> {
-           try {
-               int id1 = Integer.parseInt(s1.substring(s1.indexOf('s') + 1));
-               int id2 = Integer.parseInt(s2.substring(s1.indexOf('s') + 1));
-               return id1 - id2;
-           } catch (NumberFormatException ex) {
-               return s1.compareTo(s2);
-           }
-       };*/
-      Map<String, Map<String,Integer>> outputReports = new TreeMap<>(stringComparator);
-      studentList.forEach(
-           student -> {
-              List<Student> neighboursList = getNeighboursList(student);
-              Map<String,Integer> report = new TreeMap<>(stringComparator);
-
-              neighboursList.forEach(
-                    neighbourStudent -> {
-                       int amountOfIdenticalAnswers = (int) neighbourStudent
-                             .getAnswers()
-                             .entrySet()
-                             .stream()
-                             .filter(e -> e.getValue().equals(student.getAnswers().get(e.getKey()))
-                       ).count();
-                       report.put(neighbourStudent.getName(),amountOfIdenticalAnswers);
-                    }
-              );
-              outputReports.put(student.getName(),report);
-           }
-      );
-      detailedReport = outputReports;
-   }
-
-   public void printNewDetailedReports(){
-       ToIntFunction<Student> toInt = student ->{
-           Map<Student,Integer> singleStudentReport = new HashMap<>();
-
-           getNeighboursList(student).forEach(
-                   neighbourStudent -> {
-                       int amountOfIdenticalAnswers = (int) neighbourStudent
-                               .getAnswers()
-                               .entrySet()
-                               .stream()
-                               .filter(e -> e.getValue().equals(student.getAnswers().get(e.getKey()))).count();
-                       singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
-                   }
-           );
-
-           return singleStudentReport.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
+    public Map<Student,Integer> getAnswersComparisonForThisStudent(Student thisStudent) {
+        Map<Student,Integer> singleStudentReport = new HashMap<>();
+        getNeighboursList(thisStudent).forEach(
+                neighbourStudent -> {
+                    int amountOfIdenticalAnswers = (int) neighbourStudent
+                            .getAnswers()
+                            .entrySet()
+                            .stream()
+                            .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count();
+                    singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
+                }
+        );
+        return singleStudentReport;
+    }
 
 
-       } ;
-
-       Comparator<Student> studentComparator = Comparator.comparingInt(toInt).thenComparing(Student::getName);
-       Map<Student, Map<Student,Integer>> newOutputReports = new TreeMap<>(studentComparator);
-       studentList.forEach(student -> {
-           Map<Student,Integer> singleStudentReport = new HashMap<>();
-           getNeighboursList(student).forEach(
-                   neighbourStudent -> {
-                       int amountOfIdenticalAnswers = (int) neighbourStudent
-                               .getAnswers()
-                               .entrySet()
-                               .stream()
-                               .filter(e -> e.getValue().equals(student.getAnswers().get(e.getKey()))).count();
-                       singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
-                   }
-           );
-
-           newOutputReports.put(student,singleStudentReport);
-
-       });
-
-      // newOutputReports.entrySet().stream().forEach(           e -> System.out.println(e.getKey().getName() +"  " + e.getValue()));
-
-       int a = 2;
-
-       for(Map.Entry<Student,Map<Student,Integer>> entry : newOutputReports.entrySet()) {
-           System.out.print("\n [" + entry.getKey().getName());
-           Map<Student,Integer> innerMap = entry.getValue();
-           for(Map.Entry<Student,Integer> innerMapEntry : innerMap.entrySet()){
-               System.out.print( "  {" + innerMapEntry.getKey().getName()  +"---"+ innerMapEntry.getValue() + "}");
-           }
-           System.out.print("]\n");
-       }
-
-   }
-
-    /**
-     * This method creates the aggregated report. Information used in the detailed report are retrieved to produce a new
-     * Map where keys are student names and values are Detail entity, which contains information on the maximum amount
-     * of answers identical to answers of neighbours.
-     * The map is then rearranged and sorted by values, in decreasing order, according to the maximum amount of answers
-     * identical to  answers of neighbours.
-     */
-   public void generateAggregatedReport() {
-      Map<String,Detail> tempAggregatedReports = new HashMap<>();
-      detailedReport.forEach(
-            (k,v) -> {
-               double maxAmountOfIdenticalAnswers =
-                     v.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
-               String fromWhomTheStudentCopied = v.entrySet()
-                       .stream()
-                       .max(Comparator.comparingInt(Map.Entry::getValue))
-                       .get()
-                       .getKey();
-               int ratio = (int) ((100*maxAmountOfIdenticalAnswers)/16);
-               tempAggregatedReports.put(k,new Detail(fromWhomTheStudentCopied,ratio));
-            }
-      );
-
-      aggregatedReport =
-            tempAggregatedReports.entrySet().stream()
-                  .sorted(Collections.reverseOrder(
-                          Comparator.comparingDouble(e -> e.getValue().percentageOfIdenticalAnswersWithSuspectedNeighbour)))
-                  .collect(Collectors.toMap(
-                        Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)
-                  );
-   }
-
-   public class Detail {
-      private final String fromWhomThisStudentCopied;
-      private final int percentageOfIdenticalAnswersWithSuspectedNeighbour;
-
-       public String getFromWhomThisStudentCopied() {
-           return fromWhomThisStudentCopied;
-       }
-
-       public int getPercentageOfIdenticalAnswersWithSuspectedNeighbour() {
-           return percentageOfIdenticalAnswersWithSuspectedNeighbour;
-       }
-
-       public Detail(String fromWhomThisStudentCopied, int percentageOfIdenticalAnswersWithSuspectedNeighbour) {
-         this.fromWhomThisStudentCopied = fromWhomThisStudentCopied;
-         this.percentageOfIdenticalAnswersWithSuspectedNeighbour = percentageOfIdenticalAnswersWithSuspectedNeighbour;
-      }
-   }
-
-
-   public Map<Student,Integer> getAnswersComparisonForThisStudent(Student thisStudent) {
-       Map<Student,Integer> singleStudentReport = new HashMap<>();
-       getNeighboursList(thisStudent).forEach(
-               neighbourStudent -> {
-                   int amountOfIdenticalAnswers = (int) neighbourStudent
-                           .getAnswers()
-                           .entrySet()
-                           .stream()
-                           .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count();
-                   singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
-               }
-       );
-       return singleStudentReport;
-   }
 }
