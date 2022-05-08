@@ -28,6 +28,5 @@ public class ReportPrinterTest {
     @Test
     public  void testPrintThresholdBasedCheatingStudentList() throws IOException {
         ReportPrinter.printThresholdBasedCheatingStudentList(exam);
-
     }
 }
