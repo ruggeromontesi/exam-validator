@@ -42,9 +42,9 @@ public class CSVReader {
    private static Map<Integer, String> parseAnswers(String[] studentResult) {
       Map<Integer, String> answers = new HashMap<>();
 
-      for (int i = 2; i<studentResult.length; i++)
-         answers.put(i-1, studentResult[i]);
-
+      for (int i = 2; i < studentResult.length; i++) {
+         answers.put(i - 1, studentResult[i]);
+      }
       return answers;
    }
 

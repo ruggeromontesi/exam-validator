@@ -1,64 +1,71 @@
 package com.exam.validator.entity;
 
-import com.exam.validator.util.CSVReader;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
-import static com.exam.validator.constants.Constants.AUDITORIUM_NUMBER_OF_COLUMNS;
-import static com.exam.validator.constants.Constants.CHEATING_THRESHOLD;
+import com.exam.validator.constants.Constants;
+import com.exam.validator.util.CSVReader;
 
 public class Exam {
    private int cheatingThreshold;
+
    private final List<Student> studentList = CSVReader.parse();
-    private final ToIntFunction<Student> studentToIntFunction = student ->{
-        Map<Student,Integer> singleStudentReport = new HashMap<>();
-        getNeighboursList(student).forEach(
-                neighbourStudent -> {
-                    int amountOfIdenticalAnswers = (int) neighbourStudent
+
+   private final ToIntFunction<Student> studentToIntFunction = student -> {
+      Map<Student,Integer> singleStudentReport = new HashMap<>();
+      getNeighboursList(student).forEach(
+            neighbourStudent -> {
+                  int amountOfIdenticalAnswers = (int) neighbourStudent
                             .getAnswers()
                             .entrySet()
                             .stream()
                             .filter(e -> e.getValue().equals(student.getAnswers().get(e.getKey()))).count();
-                    singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
-                }
-        );
-        return singleStudentReport.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
-    } ;
+                  singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
+            }
+      );
+      return singleStudentReport.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
+   };
 
-    private final Comparator<Student> studentComparator = Comparator.comparingInt(studentToIntFunction).reversed().thenComparing(Student::getName);
+   private final Comparator<Student> studentComparator = Comparator.comparingInt(studentToIntFunction)
+         .reversed().thenComparing(Student::getName);
 
-    public Comparator<Student> getStudentComparator() {
-        return studentComparator;
-    }
-    public int getCheatingThreshold() {
-        return cheatingThreshold;
-    }
-
-    public List<Student> getStudentList() {
-        return studentList;
-    }
-
-    /**
-     * Accepts a vararg parameter of type String. If no or invalid String is passed a predefined threshold is used.
-     * @param args A String containing an integer number representing the threshold for determining if the student
-     * has cheated. If the students has a number of answers identical to a neighbour he is considered to have cheated.
-     */
+   /**Accepts a vararg parameter of type String. If no or invalid String is passed a predefined threshold is used.
+    * @param args A String containing an integer number representing the threshold for determining if the student has cheated.
+    * If the students has a number of answers identical to a neighbour he is considered to have cheated.
+    * */
    public Exam(String... args) {
-       if(args.length == 0) {
-           cheatingThreshold = CHEATING_THRESHOLD;
-       } else {
-           try {
-               int userThreshold = Integer.parseInt(args[0]);
-               cheatingThreshold = (userThreshold > 0 && userThreshold < 17) ? userThreshold : CHEATING_THRESHOLD;
-           } catch(NumberFormatException ex) {
-               cheatingThreshold = CHEATING_THRESHOLD;
-           }
-       }
+
+      if (args.length == 0) {
+         cheatingThreshold = Constants.CHEATING_THRESHOLD;
+      } else {
+         try {
+            int userThreshold = Integer.parseInt(args[0]);
+            cheatingThreshold = (userThreshold > 0 && userThreshold < 17) ? userThreshold : Constants.CHEATING_THRESHOLD;
+         } catch (NumberFormatException ex) {
+            cheatingThreshold = Constants.CHEATING_THRESHOLD;
+         }
+      }
    }
 
-    /**
+   public Comparator<Student> getStudentComparator() {
+      return studentComparator;
+   }
+
+   public int getCheatingThreshold() {
+      return cheatingThreshold;
+   }
+
+   public List<Student> getStudentList() {
+      return studentList;
+   }
+
+   /**
      * Given a coordinate it retrieves the Student sitting at this coordinate and wraps it within an Optional.
      * @param coordinate the coordinate from which is required to get the relevant Student instance.
      * @return the Student with sitting location equal to the given coordinate.
@@ -78,7 +85,7 @@ public class Exam {
             ));
    }
 
-    /**
+   /**
      * Determines the list of coordinates of neighbouring positions for the Student passed as parameter .
      * @param thisStudent The students for which is required to determine the neighbouring positions.
      * @return the list of neighbouring positions.
@@ -88,34 +95,34 @@ public class Exam {
       int colIndex = Integer.parseInt(thisStudent.getSittingLocation().substring(2,3));
       List<String> possibleCoordinateOfNeighbours = new ArrayList<>();
       //EAST neighbour
-      if(colIndex > 1) {
+      if (colIndex > 1) {
          possibleCoordinateOfNeighbours.add(rowIndex + "." + (colIndex - 1));
       }
       //WEST neighbour
-      if (colIndex < AUDITORIUM_NUMBER_OF_COLUMNS) {
-         possibleCoordinateOfNeighbours.add(rowIndex + "." + (colIndex+1));
+      if (colIndex < Constants.AUDITORIUM_NUMBER_OF_COLUMNS) {
+         possibleCoordinateOfNeighbours.add(rowIndex + "." + (colIndex + 1));
       }
       //SOUTH-WEST neighbour
-      if(rowIndex > 1 && colIndex > 1) {
+      if (rowIndex > 1 && colIndex > 1) {
          possibleCoordinateOfNeighbours.add((rowIndex - 1) + "." + (colIndex - 1));
       }
       //SOUTH neighbour
-      if(rowIndex > 1){
+      if (rowIndex > 1) {
          possibleCoordinateOfNeighbours.add((rowIndex - 1) + "." + colIndex);
       }
       //SOUTH-EAST neighbour
-      if(rowIndex > 1 && colIndex < AUDITORIUM_NUMBER_OF_COLUMNS) {
+      if (rowIndex > 1 && colIndex < Constants.AUDITORIUM_NUMBER_OF_COLUMNS) {
          possibleCoordinateOfNeighbours.add((rowIndex - 1) + "." + (colIndex + 1));
       }
       return possibleCoordinateOfNeighbours;
    }
 
-    /**
+   /**
      * Determines the list of  students neighbouring to the student passed as parameter.
      * @param thisStudent the student for which is determined the list of neighbours.
      * @return the list of neighbours.
      */
-    List<Student> getNeighboursList(Student thisStudent) {
+   public List<Student> getNeighboursList(Student thisStudent) {
       List<String> possibleCoordinateOfNeighbours = getCoordinatesOfNeighbouringSittingLocations(thisStudent);
       return possibleCoordinateOfNeighbours
             .stream()
@@ -125,7 +132,7 @@ public class Exam {
             .collect(Collectors.toList());
    }
 
-    /**
+   /**
      * Determines if the student has cheated based on the amount of answers identical to his neighbours.
      * @param thisStudent the student for which is required to determine if he has cheated or not.
      * @return if this student has cheated or not.
@@ -140,23 +147,22 @@ public class Exam {
                   .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count() > cheatingThreshold);
    }
 
-    /***
-     * Creates a map where keys are the neighbouring students and values the amount fo identical answers
+   /**Creates a map where keys are the neighbouring students and values the amount fo identical answers.
      * @param thisStudent student for which the map is generated
      * @return map Student/ amount of identical values
      */
-    public Map<Student,Integer> getAnswersComparisonForThisStudent(Student thisStudent) {
-        Map<Student,Integer> singleStudentReport = new HashMap<>();
-        getNeighboursList(thisStudent).forEach(
-                neighbourStudent -> {
-                    int amountOfIdenticalAnswers = (int) neighbourStudent
+   public Map<Student,Integer> getAnswersComparisonForThisStudent(Student thisStudent) {
+      Map<Student,Integer> singleStudentReport = new HashMap<>();
+      getNeighboursList(thisStudent).forEach(
+            neighbourStudent -> {
+                  int amountOfIdenticalAnswers = (int) neighbourStudent
                             .getAnswers()
                             .entrySet()
                             .stream()
                             .filter(e -> e.getValue().equals(thisStudent.getAnswers().get(e.getKey()))).count();
-                    singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
-                }
-        );
-        return singleStudentReport;
-    }
+                  singleStudentReport.put(neighbourStudent,amountOfIdenticalAnswers);
+            }
+      );
+      return singleStudentReport;
+   }
 }

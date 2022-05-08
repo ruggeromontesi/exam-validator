@@ -6,7 +6,9 @@ import java.util.StringJoiner;
 
 public class Student {
    private String name;
+
    private String sittingLocation;
+
    private Map<Integer, String> answers = new HashMap<Integer, String>();
 
    public String getName() {
