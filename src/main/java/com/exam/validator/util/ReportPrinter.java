@@ -68,10 +68,10 @@ public class ReportPrinter {
 
         exam.getStudentList().forEach(student -> {
             try {
-                writer.write("Comparison of identical answers for " +student.getName());
+                writer.write("Comparison of identical answers for " + String.format("%-11.11s", student.getName()));
                 exam.getAnswersComparisonForThisStudent(student).forEach((key, value) -> {
                     try {
-                        writer.write("  {" + key.getName() + "---" + value + "}\t");
+                        writer.write("  {" + key.getName() + " : " + value + "}\t");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
