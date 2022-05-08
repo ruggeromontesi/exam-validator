@@ -89,7 +89,7 @@ public class ExamTest {
       newOutputReports.put(student1,exam.getAnswersComparisonForThisStudent(student1) );
       newOutputReports.put(student6,exam.getAnswersComparisonForThisStudent(student6) );
       //student 6 has highest numeber of identical answers then should come first in the map.
-      newOutputReports.entrySet().stream().limit(1).forEach(e -> Assert.assertTrue(e.getKey().getName().equals("Studentas6")));
+      newOutputReports.entrySet().stream().limit(1).forEach(e -> Assert.assertEquals("Studentas6", e.getKey().getName()));
    }
 
 }
