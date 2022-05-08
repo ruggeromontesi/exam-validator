@@ -41,7 +41,7 @@ public class ReportPrinter {
                     .filter(studentIntegerEntry -> studentIntegerEntry.getValue() == maximumNumberOfIdenticalQuestions)
                     .collect(Collectors.toList());
             try {
-               String reportLine = String.format("%-11.11s %4s",key.getName(), " has" ) + maximumNumberOfIdenticalQuestions + " answers identical to "
+               String reportLine = String.format("%-11.11s %5s",key.getName(), " has " ) + maximumNumberOfIdenticalQuestions + " answers identical to "
                         + maxEntryList.stream().map(studentIntegerEntry -> studentIntegerEntry.getKey().getName()).collect(
                         Collectors.joining(", ")
                 ) + ". \n";
