@@ -3,6 +3,7 @@ package com.exam.validator;
 import com.exam.validator.entity.Exam;
 import com.exam.validator.util.ReportPrinter;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public class Main {
         correctAnswers.put(16, "a");
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         Exam exam = new Exam(args);
         ReportPrinter.printReports(exam);
     }
