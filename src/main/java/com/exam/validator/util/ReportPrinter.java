@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -29,20 +30,34 @@ public class ReportPrinter {
         BufferedWriter writer = new BufferedWriter(new FileWriter(REPORTS_DIRECTORY + "/" + AGGREGATED_REPORT_FILENAME));
         writer.write(AGGREGATED_REPORT_HEADER);
         exam.getStudentList().forEach(student -> report.put(student, exam.getAnswersComparisonForThisStudent(student)));
-        report.entrySet().forEach(
+        report.forEach((key, value) -> {
+            int maximumNumberOfIdenticalQuestions = exam.getAnswersComparisonForThisStudent(key)
+                    .entrySet()
+                    .stream()
+                    .max(Comparator.comparingInt(Map.Entry::getValue)).get().getValue();
+            List<Map.Entry<Student, Integer>> maxEntryList = exam.getAnswersComparisonForThisStudent(key)
+                    .entrySet()
+                    .stream()
+                    .filter(studentIntegerEntry -> studentIntegerEntry.getValue() == maximumNumberOfIdenticalQuestions)
+                    .collect(Collectors.toList());
+            try {
+               String reportLine = String.format("%-11.11s %4s",key.getName(), " has" ) + maximumNumberOfIdenticalQuestions + " answers identical to "
+                        + maxEntryList.stream().map(studentIntegerEntry -> studentIntegerEntry.getKey().getName()).collect(
+                        Collectors.joining(", ")
+                ) + ". \n";
+               /*
+                              String reportLine = key.getName() + " has " + maximumNumberOfIdenticalQuestions + " answers identical to "
+                        + maxEntryList.stream().map(studentIntegerEntry -> studentIntegerEntry.getKey().getName()).collect(
+                        Collectors.joining(" ,")
 
-                e -> {
-                    Map.Entry<Student,Integer> maxEntry = exam.getAnswersComparisonForThisStudent(e.getKey())
-                            .entrySet()
-                            .stream()
-                            .max(Comparator.comparingInt(Map.Entry::getValue)).get();
-                    try {
-                        writer.write(e.getKey().getName() + " has " + maxEntry.getValue()  + " answers identical to " + maxEntry.getKey().getName() +"\n");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-        );
+                */
+
+
+                writer.write(reportLine);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
 
         writer.close();
     }
@@ -54,9 +69,9 @@ public class ReportPrinter {
         exam.getStudentList().forEach(student -> {
             try {
                 writer.write("Comparison of identical answers for " +student.getName());
-                exam.getAnswersComparisonForThisStudent(student).entrySet().forEach(e -> {
+                exam.getAnswersComparisonForThisStudent(student).forEach((key, value) -> {
                     try {
-                        writer.write( "  {" + e.getKey().getName() + "---" + e.getValue() + "}\t");
+                        writer.write("  {" + key.getName() + "---" + value + "}\t");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

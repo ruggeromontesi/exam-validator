@@ -16,11 +16,11 @@ public interface Constants {
    String THRESHOLD_BASED_REPORT_FILENAME = "threshold-based-report.txt";
 
    String DETAILED_REPORT_HEADER = "STUDENT DETAILED REPORT\n"+
-         "This file provides a detailed report for each student. A single record is shown on each line.\n\n" +
+         "This file provides a detailed report for each student. A single record is shown on each line.\n" +
          "Each line consists of the following:\n" +
          "1) Student name.\n" +
          "2) A map where are listed the names of neighboring students and the amount of identical answers with them\n"+
-         " \n\n\n";
+         " \n\n";
 
    String AGGREGATED_REPORT_HEADER = "STUDENT AGGREGATED REPORT\n" +
            "This file provides an aggregated report for each student. A single record is shown on each line.\n\n" +
