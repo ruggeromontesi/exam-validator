@@ -21,7 +21,7 @@ in comparison to each of the neighbours.
 ###################################################################################################
 
 RUNNING AND INSTALLATION
-Instruction to run the application
+Instruction to download, build and run  the application
 1) crate a new folder, get in to console mode typing cmd on address bar
 2) CLONE REPOSITORY: git clone https://github.com/ruggeromontesi/exam-validator.git
 3) get into root folder: exam-validator
@@ -38,6 +38,15 @@ If the parameter is not a parseable integer or if it is an integer but not in th
 the application uses the default value 5.
 
 6) Result file are located within /target/generated-reports
+
+
+Instruction to download and run (WITHOUT BUILDING) the application.
+1) crate a new folder, get in to console mode typing cmd on address bar
+2) CLONE REPOSITORY: git clone https://github.com/ruggeromontesi/exam-validator.git
+3) get into root folder: exam-validator
+4) type java -jar exam-validator-2.0.jar
+
+
 ###################################################################################################
 
 RUNNING AND INSTALLATION WIZARD(Windows environment)
