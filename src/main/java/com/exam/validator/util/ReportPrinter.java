@@ -45,13 +45,6 @@ public class ReportPrinter {
                         + maxEntryList.stream().map(studentIntegerEntry -> studentIntegerEntry.getKey().getName()).collect(
                         Collectors.joining(", ")
                 ) + ". \n";
-               /*
-                              String reportLine = key.getName() + " has " + maximumNumberOfIdenticalQuestions + " answers identical to "
-                        + maxEntryList.stream().map(studentIntegerEntry -> studentIntegerEntry.getKey().getName()).collect(
-                        Collectors.joining(" ,")
-
-                */
-
 
                 writer.write(reportLine);
             } catch (IOException ex) {
