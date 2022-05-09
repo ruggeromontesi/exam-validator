@@ -39,14 +39,13 @@ the application uses the default value 5.
 
 6) Result file are located within /target/generated-reports
 
-
 Instruction to download and run (WITHOUT BUILDING) the application.
 1) crate a new folder, get in to console mode typing cmd on address bar
 2) CLONE REPOSITORY: git clone https://github.com/ruggeromontesi/exam-validator.git
 3) get into root folder: exam-validator
-4) type java -jar exam-validator-2.0.jar
-
-
+4) type java -jar exam-validator-2.0.jar <threshold>
+   For example: java -jar exam-validator-2.0.jar 10
+   will run the application setting a treshold equal to 10
 ###################################################################################################
 
 RUNNING AND INSTALLATION WIZARD(Windows environment)
