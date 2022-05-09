@@ -1,0 +1,72 @@
+STUDENT AGGREGATED REPORT
+This file provides an aggregated report for each student. A single record is shown on each line.
+
+Each line consists of the following:
+1) Student name.
+2) highest number of answers identical to neighbours, i.e.:  is first calculated the amount of 
+identical answers with all the neighbours, is then considered the highest value.
+3) Name of the neighbouring student who has the highest number of similar answers with the considered student.
+
+
+Studentas12  has 13 answers identical to Studentas13. 
+Studentas13  has 13 answers identical to Studentas12. 
+Studentas28  has 13 answers identical to Studentas29. 
+Studentas29  has 13 answers identical to Studentas28. 
+Studentas30  has 11 answers identical to Studentas31. 
+Studentas31  has 11 answers identical to Studentas30. 
+Studentas49  has 11 answers identical to Studentas42. 
+Studentas19  has 10 answers identical to Studentas13. 
+Studentas52  has 10 answers identical to Studentas43. 
+Studentas58  has 10 answers identical to Studentas59. 
+Studentas59  has 10 answers identical to Studentas58. 
+Studentas35  has 9 answers identical to Studentas36. 
+Studentas36  has 9 answers identical to Studentas35, Studentas29, Studentas28. 
+Studentas6   has 9 answers identical to Studentas7. 
+Studentas7   has 9 answers identical to Studentas6. 
+Studentas11  has 8 answers identical to Studentas2. 
+Studentas14  has 8 answers identical to Studentas5. 
+Studentas37  has 8 answers identical to Studentas28. 
+Studentas40  has 8 answers identical to Studentas31. 
+Studentas43  has 8 answers identical to Studentas36. 
+Studentas48  has 8 answers identical to Studentas39. 
+Studentas51  has 8 answers identical to Studentas43. 
+Studentas61  has 8 answers identical to Studentas53. 
+Studentas21  has 7 answers identical to Studentas12, Studentas13. 
+Studentas32  has 7 answers identical to Studentas31. 
+Studentas38  has 7 answers identical to Studentas29, Studentas30, Studentas31. 
+Studentas39  has 7 answers identical to Studentas30. 
+Studentas46  has 7 answers identical to Studentas38. 
+Studentas47  has 7 answers identical to Studentas48. 
+Studentas53  has 7 answers identical to Studentas52, Studentas46. 
+Studentas56  has 7 answers identical to Studentas48. 
+Studentas60  has 7 answers identical to Studentas53, Studentas54, Studentas61. 
+Studentas9   has 7 answers identical to Studentas2. 
+Studentas1   has 6 answers identical to Studentas2. 
+Studentas18  has 6 answers identical to Studentas19. 
+Studentas2   has 6 answers identical to Studentas1. 
+Studentas20  has 6 answers identical to Studentas21. 
+Studentas25  has 6 answers identical to Studentas26. 
+Studentas26  has 6 answers identical to Studentas25. 
+Studentas34  has 6 answers identical to Studentas25. 
+Studentas45  has 6 answers identical to Studentas37. 
+Studentas5   has 6 answers identical to Studentas6. 
+Studentas54  has 6 answers identical to Studentas46. 
+Studentas27  has 5 answers identical to Studentas18, Studentas19, Studentas28. 
+Studentas3   has 5 answers identical to Studentas2. 
+Studentas4   has 5 answers identical to Studentas5. 
+Studentas41  has 5 answers identical to Studentas42. 
+Studentas42  has 5 answers identical to Studentas34, Studentas35, Studentas41, Studentas43. 
+Studentas44  has 5 answers identical to Studentas43. 
+Studentas57  has 5 answers identical to Studentas49. 
+Studentas62  has 5 answers identical to Studentas61. 
+Studentas15  has 4 answers identical to Studentas7, Studentas6. 
+Studentas24  has 4 answers identical to Studentas9. 
+Studentas33  has 4 answers identical to Studentas26. 
+Studentas50  has 4 answers identical to Studentas51, Studentas41, Studentas43. 
+Studentas10  has 3 answers identical to Studentas9. 
+Studentas16  has 3 answers identical to Studentas7. 
+Studentas17  has 3 answers identical to Studentas15. 
+Studentas22  has 3 answers identical to Studentas12, Studentas21, Studentas23. 
+Studentas23  has 3 answers identical to Studentas24, Studentas11, Studentas22, Studentas9. 
+Studentas55  has 3 answers identical to Studentas56, Studentas47, Studentas48. 
+Studentas8   has 3 answers identical to Studentas7. 
