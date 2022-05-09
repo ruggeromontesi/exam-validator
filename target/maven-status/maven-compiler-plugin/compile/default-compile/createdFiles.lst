@@ -1,6 +1,0 @@
-com\exam\validator\entity\Student.class
-com\exam\validator\Main.class
-com\exam\validator\entity\Exam.class
-com\exam\validator\constants\Constants.class
-com\exam\validator\util\CSVReader.class
-com\exam\validator\util\ReportPrinter.class
