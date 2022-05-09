@@ -45,7 +45,7 @@ Instruction to download and run (WITHOUT BUILDING) the application.
 3) get into root folder: exam-validator
 4) type java -jar exam-validator-2.0.jar <threshold>
    For example: java -jar exam-validator-2.0.jar 10
-   will run the application setting a treshold equal to 10
+   will run the application setting a threshold equal to 10
 ###################################################################################################
 
 RUNNING AND INSTALLATION WIZARD(Windows environment)
