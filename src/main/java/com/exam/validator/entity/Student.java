@@ -2,6 +2,7 @@ package com.exam.validator.entity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Student {
@@ -58,13 +59,13 @@ public class Student {
 
       Student student = (Student) o;
 
-      if (name != null ? !name.equals(student.name) : student.name != null) {
+      if (!Objects.equals(name, student.name)) {
          return false;
       }
-      if (sittingLocation != null ? !sittingLocation.equals(student.sittingLocation) : student.sittingLocation != null) {
+      if (!Objects.equals(sittingLocation, student.sittingLocation)) {
          return false;
       }
-      return answers != null ? answers.equals(student.answers) : student.answers == null;
+      return Objects.equals(answers, student.answers);
    }
 
    @Override
