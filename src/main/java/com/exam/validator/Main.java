@@ -3,8 +3,7 @@ package com.exam.validator;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.exam.validator.entity.Exam;
-import com.exam.validator.util.ReportPrinter;
+import com.exam.validator.service.ExamService;
 
 /**
  * Students were taking an exam which was the a multichoice test. We know the location in auditorium where each student
@@ -48,8 +47,9 @@ public class Main {
    }
 
    public static void main(String[] args) {
-      Exam exam = new Exam(args);
-      ReportPrinter.printReports(exam);
+      ExamService examService = new ExamService(args);
+      examService.printReports();
+
    }
 }
 
